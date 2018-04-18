@@ -1,0 +1,40 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background"
+    tools:context="mobilepharmacy.mobilepharmacy.PharmacyHome">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:id="@+id/pharmacyLayoutFrag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/receivedMessage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/inbox" />
+
+        <ImageButton
+            android:id="@+id/customerDetails"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/customers" />
+
+        <ImageButton
+            android:id="@+id/sendmessage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/send" />
+    </LinearLayout>
+
+</FrameLayout>

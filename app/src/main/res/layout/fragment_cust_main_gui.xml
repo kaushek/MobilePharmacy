@@ -1,0 +1,39 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="mobilepharmacy.mobilepharmacy.CustMainGUIFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:id="@+id/linearLayout_frag_Cust"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <Button
+            android:id="@+id/sendPres"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Send Prescrption"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/inbox"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Inbox"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            tools:text="Inbox"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/pharMainDrawer"
+
+    tools:context="mobilepharmacy.mobilepharmacy.PharmacistMainGUI">
+
+    <LinearLayout
+        android:id="@+id/pharmaLinLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/receivedMessage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/inbox" />
+
+        <ImageButton
+            android:id="@+id/customerDetails"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/customers" />
+
+        <ImageButton
+            android:id="@+id/sendmessage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/send" />
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigationPhar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/pharnavigation"
+        android:layout_gravity="start"
+        tools:ignore="ExtraText">>
+
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>
