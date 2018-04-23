@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,6 +29,7 @@ public class CustomerSignUp extends AppCompatActivity {
     private EditText address;
     private EditText city;
     private EditText area;
+    private EditText custRole;
     private Button signUp;
 
     private String fnme;
@@ -39,6 +41,7 @@ public class CustomerSignUp extends AppCompatActivity {
     private String addrs;
     private String cty;
     private String ara;
+    private String role;
 
 
     private FirebaseDatabase firebaseDatabase;
@@ -66,6 +69,10 @@ public class CustomerSignUp extends AppCompatActivity {
         address = (EditText)findViewById(R.id.AddressTxt);
         city = (EditText)findViewById(R.id.cityTxt);
         area = (EditText)findViewById(R.id.areaTxt);
+        custRole = (EditText)findViewById(R.id.customerRoleTxt);
+
+        custRole.setText("Customer");
+        custRole.setVisibility(View.INVISIBLE);
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,8 +87,9 @@ public class CustomerSignUp extends AppCompatActivity {
                 addrs = address.getText().toString();
                 cty = city.getText().toString();
                 ara = area.getText().toString();
+                role = custRole.getText().toString();
 
-                addtoDatabase(fnme,lnme,eml,pwd, confpwd, num, addrs,cty, ara);
+
                 firebaseAuth.createUserWithEmailAndPassword(eml, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -89,7 +97,13 @@ public class CustomerSignUp extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             Toast.makeText(CustomerSignUp.this, "Registration successful", Toast.LENGTH_SHORT).show();
+
+                            UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
+                            String userId = userInfo.getUid();
+                            customerRole(userId, role);
+                            addtoDatabase(fnme,lnme,eml,pwd, confpwd, num, addrs,cty, ara);
                             Intent intent = new Intent(CustomerSignUp.this, Login.class);
+//                            intent.putExtra("CustomerRole", role);
                             startActivity(intent);
                         }
                         else {
@@ -107,5 +121,11 @@ public class CustomerSignUp extends AppCompatActivity {
         AddCustomer addCustomer = new AddCustomer(fname, lname, email, password, conPassword, number, address, city, area);
         databaseReference.child("Customers").push().setValue(addCustomer);
 
+    }
+
+    private void customerRole(String Id, String Cusrole)
+    {
+        UserRole customerRole = new UserRole(Cusrole);
+        databaseReference.child("UserRole").child(Id).setValue(customerRole);
     }
 }

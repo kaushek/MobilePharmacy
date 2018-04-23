@@ -1,6 +1,8 @@
 package mobilepharmacy.mobilepharmacy;
 ;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +46,7 @@ public class Login extends AppCompatActivity {
 //    private Button check;
 
     AddDeliveryMan addDeliveryMan;
+    AddCustomer customer;
     final AddDeliveryMan deliveryMan = new AddDeliveryMan();
 
     @Override
@@ -103,58 +107,83 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressDialog.dismiss();
-                                if (task.isSuccessful())
-
+                                if(task.isSuccessful())
                                 {
-                                     users = firebaseAuth.getCurrentUser();
+                                    users = firebaseAuth.getCurrentUser();
                                     getUserDetails();
-//                                    reference.addValueEventListener(new ValueEventListener() {
-////                                    reference.orderByChild("userId").equalTo(users.getUid())
-////                                            .addValueEventListener(new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                                            for(DataSnapshot ds: dataSnapshot.getChildren() )
-//                                            {
-//                                                UserRole user = new UserRole();
-//                                                user = ds.getValue(UserRole.class);
-//                                                Toast.makeText(Login.this, user.getJobRole(), Toast.LENGTH_SHORT).show();
-//
-//                                            }
-//
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(DatabaseError databaseError) {
-//
-//                                        }
-//                                    });
-//                                    FirebaseUser user = firebaseAuth.getCurrentUser();
-//                                    //System.out.print(user);
-//
-//                                    Log.d("check user info", "onComplete: " + user);
-//                                    Toast.makeText(Login.this, user.getEmail(), Toast.LENGTH_SHORT).show();
-//                                    Toast.makeText(Login.this, user.getUid(), Toast.LENGTH_SHORT).show();
-//                                    Toast.makeText(Login.this, user.toString(), Toast.LENGTH_SHORT).show();
-//                                    String role = deliveryMan.getEmpJbRole();
-//                                    addDeliveryMan = (AddDeliveryMan) getIntent().getSerializableExtra("DeliveryManDetails");
-//                                    String role = addDeliveryMan.getEmpJbRole();
-//                                    if ( role == "Delevery Man")
-//                                    {
-//                                        Intent activityPharmacist = new Intent(Login.this, PharmacistMainGUI.class);
-//                                        startActivity(activityPharmacist);
-//                                    }
-//                                    else {
-//                                        Toast.makeText(Login.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
-//                                        Intent intent = new Intent(Login.this, CustomerMainGUI.class);
-//                                        startActivity(intent);
-//                                    }
                                 }
                                 else {
-                                 //   Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                    builder.setTitle("Login Failed");
+                                    builder.setMessage("Username or Password is incorrect.");
+
+                                    // add a button
+                                    builder.setPositiveButton("OK", null);
+
+                                    // create and show the alert dialog
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
                                 }
                             }
+
                         });
+//                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<AuthResult> task) {
+//                                progressDialog.dismiss();
+//
+//                                if (task.isSuccessful())
+//                                {
+//                                    users = firebaseAuth.getCurrentUser();
+//                                    getUserDetails();
+//
+////                                    reference.addValueEventListener(new ValueEventListener() {
+//////                                    reference.orderByChild("userId").equalTo(users.getUid())
+//////                                            .addValueEventListener(new ValueEventListener() {
+////                                        @Override
+////                                        public void onDataChange(DataSnapshot dataSnapshot) {
+////                                            for(DataSnapshot ds: dataSnapshot.getChildren() )
+////                                            {
+////                                                UserRole user = new UserRole();
+////                                                user = ds.getValue(UserRole.class);
+////                                                Toast.makeText(Login.this, user.getJobRole(), Toast.LENGTH_SHORT).show();
+////
+////                                            }
+////
+////
+////                                        }
+////
+////                                        @Override
+////                                        public void onCancelled(DatabaseError databaseError) {
+////
+////                                        }
+////                                    });
+////                                    FirebaseUser user = firebaseAuth.getCurrentUser();
+////                                    //System.out.print(user);
+////
+////                                    Log.d("check user info", "onComplete: " + user);
+////                                    Toast.makeText(Login.this, user.getEmail(), Toast.LENGTH_SHORT).show();
+////                                    Toast.makeText(Login.this, user.getUid(), Toast.LENGTH_SHORT).show();
+////                                    Toast.makeText(Login.this, user.toString(), Toast.LENGTH_SHORT).show();
+////                                    String role = deliveryMan.getEmpJbRole();
+////                                    addDeliveryMan = (AddDeliveryMan) getIntent().getSerializableExtra("DeliveryManDetails");
+////                                    String role = addDeliveryMan.getEmpJbRole();
+////                                    if ( role == "Delevery Man")
+////                                    {
+////                                        Intent activityPharmacist = new Intent(Login.this, PharmacistMainGUI.class);
+////                                        startActivity(activityPharmacist);
+////                                    }
+////                                    else {
+////                                        Toast.makeText(Login.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
+////                                        Intent intent = new Intent(Login.this, CustomerMainGUI.class);
+////                                        startActivity(intent);
+////                                    }
+//                                }
+//                                else {
+//                                 //   Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        });
 
 
                 loginFunction(username.getText().toString(), password.getText().toString());
@@ -174,11 +203,13 @@ public class Login extends AppCompatActivity {
 
 
     }
+
     private void getUserDetails(){
         reference.child("UserRole").child(users.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-              UserRole user = dataSnapshot.getValue(UserRole.class);
+
+                UserRole user = dataSnapshot.getValue(UserRole.class);
                 Log.d("Check",user.getJobRole());
 //                Toast.makeText(Login.this, "Job Role :"+user.getJobRole(), Toast.LENGTH_SHORT).show();
                 if(user.getJobRole().equals("Delivery Man")){
@@ -188,20 +219,84 @@ public class Login extends AppCompatActivity {
                     Intent intent = new Intent(Login.this,PharmacistMainGUI.class);
                     startActivity(intent);
                 }
-                else{
+                else if (user.getJobRole().equals("Customer")){
+//                    String s = getIntent().getExtras().getString("CustomerRole");
                     Intent intent = new Intent(Login.this,CustomerMainGUI.class);
                     startActivity(intent);
                 }
 
 
+
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
+//        reference.child("UserRole").child(users.getUid()).addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                UserRole user = dataSnapshot.getValue(UserRole.class);
+//                Log.d("Check",user.getJobRole());
+////                Toast.makeText(Login.this, "Job Role :"+user.getJobRole(), Toast.LENGTH_SHORT).show();
+//                if(user.getJobRole().equals("Delivery Man")){
+//                    Intent intent = new Intent(Login.this,MapsActivity.class);
+//                    startActivity(intent);
+//                }else if (user.getJobRole().equals("Pharmacist")){
+//                    Intent intent = new Intent(Login.this,PharmacistMainGUI.class);
+//                    startActivity(intent);
+//                }
+//                else if (user.getJobRole().equals("Customer")){
+////                    String s = getIntent().getExtras().getString("CustomerRole");
+//                    Intent intent = new Intent(Login.this,CustomerMainGUI.class);
+//                    startActivity(intent);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+
+//        customer = new AddCustomer();
+//        reference.child("Customers").child(users.getUid()).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
     }
+
+
 
     private void loginFunction(String uName, String uPass)
     {
@@ -220,33 +315,33 @@ public class Login extends AppCompatActivity {
             Intent activitymaps = new Intent(Login.this, MapsActivity.class);
             startActivity(activitymaps);
         }
-        else if (deliveryMan.getEmpJbRole() == "Delevery Man")
-        {
-            firebaseAuth.signInWithEmailAndPassword(username.getText().toString(), password.getText().toString())
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful())
-                            {
-//                                Toast.makeText(Login.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
-//                                Intent activitymaps = new Intent(Login.this, MapsActivity.class);
-//                                startActivity(activitymaps);
-
-                                //String role = deliveryMan.getEmpJbRole();
-                                addDeliveryMan = (AddDeliveryMan) getIntent().getSerializableExtra("DeliveryManDetails");
-//                                String role = addDeliveryMan.getEmpJbRole();
-//                                if ( role == "Delevery Man")
-//                                {
-                                    Intent activityPharmacist = new Intent(Login.this, PharmacistMainGUI.class);
-                                    startActivity(activityPharmacist);
-//                                }
-                            }
-                            else {
-//                                   Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
+//        else if (deliveryMan.getEmpJbRole() == "Delevery Man")
+//        {
+//            firebaseAuth.signInWithEmailAndPassword(username.getText().toString(), password.getText().toString())
+//                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if (task.isSuccessful())
+//                            {
+////                                Toast.makeText(Login.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
+////                                Intent activitymaps = new Intent(Login.this, MapsActivity.class);
+////                                startActivity(activitymaps);
+//
+//                                //String role = deliveryMan.getEmpJbRole();
+//                                addDeliveryMan = (AddDeliveryMan) getIntent().getSerializableExtra("DeliveryManDetails");
+////                                String role = addDeliveryMan.getEmpJbRole();
+////                                if ( role == "Delevery Man")
+////                                {
+//                                    Intent activityPharmacist = new Intent(Login.this, PharmacistMainGUI.class);
+//                                    startActivity(activityPharmacist);
+////                                }
+//                            }
+//                            else {
+////                                   Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//        }
 
     }
 

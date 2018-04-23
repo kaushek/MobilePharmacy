@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageListView extends AppCompatActivity {
 
@@ -20,6 +21,7 @@ public class MessageListView extends AppCompatActivity {
     DatabaseReference reference;
 
     ArrayList<String> list;
+    private List<AddCustomerTexts> customerMessageList = new ArrayList<>();
     ArrayAdapter<String> adapter;
 
     AddCustomerTexts custText;
@@ -47,6 +49,7 @@ public class MessageListView extends AppCompatActivity {
                 {
                     custText = ds.getValue(AddCustomerTexts.class);
                     list.add(custText.getFrom().toString() + "\n" + custText.getNotes().toString());
+                    customerMessageList.add(custText);
 
                 }
                 listView.setAdapter(adapter);

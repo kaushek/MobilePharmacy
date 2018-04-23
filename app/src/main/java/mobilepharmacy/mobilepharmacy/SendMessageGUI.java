@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -43,6 +45,8 @@ public class SendMessageGUI extends AppCompatActivity {
 
     private Uri filepath;
     private final int PICK_IMAGE_REQUEST = 10;
+
+    private String imageKey = UUID.randomUUID().toString();
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -76,6 +80,7 @@ public class SendMessageGUI extends AppCompatActivity {
             public void onClick(View v) {
                 chooseImage();
 
+
             }
         });
 
@@ -88,20 +93,24 @@ public class SendMessageGUI extends AppCompatActivity {
                 addNote = note.getText().toString();
 
                 if (addTo != null && addSubject != null && addNote != null) {
-                    AddTextToDB(addTo,addFrom, addSubject, addNote);
+                    AddTextToDB(addTo,addFrom, addSubject, addNote, imageKey);
                     uploadImage();
-                    Toast.makeText(SendMessageGUI.this, "Sent", Toast.LENGTH_SHORT).show();
+
+
+//                    FirebaseAuthException e = (FirebaseAuthException )task.getException();
+//                    Toast.makeText(SendMessageGUI.this, "Failed Registration: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SendMessageGUI.this, "Message sent", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(SendMessageGUI.this, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SendMessageGUI.this, "Sorry! Unable to send your message", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
 
-    private void AddTextToDB(String Add_To, String Add_from, String Add_Subject, String Add_Note) {
-        AddCustomerTexts addDetails = new AddCustomerTexts(Add_To, Add_from, Add_Subject, Add_Note);
+    private void AddTextToDB(String Add_To, String Add_from, String Add_Subject, String Add_Note, String imageKey) {
+        AddCustomerTexts addDetails = new AddCustomerTexts(Add_To, Add_from, Add_Subject, Add_Note, imageKey);
         databaseReference.child("AddMessageItems").push().setValue(addDetails);
     }
 
@@ -116,10 +125,10 @@ public class SendMessageGUI extends AppCompatActivity {
     private void uploadImage() {
         if (filepath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
+            progressDialog.setTitle("Sending...");
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child("image/" + imageKey);
             ref.putFile(filepath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -134,6 +143,9 @@ public class SendMessageGUI extends AppCompatActivity {
                             progressDialog.dismiss();
                         }
                     });
+        }
+        else{
+            Toast.makeText(SendMessageGUI.this, "Failed to send your prescription", Toast.LENGTH_SHORT).show();
         }
     }
 

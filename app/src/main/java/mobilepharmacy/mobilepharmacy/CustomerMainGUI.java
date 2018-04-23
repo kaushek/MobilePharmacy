@@ -9,9 +9,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class CustomerMainGUI extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener   {
 
@@ -20,6 +23,8 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+
+    private FirebaseAuth firebaseAuth;
 
     public void showReceivedGUI()
     {
@@ -49,6 +54,8 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main_gui);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         showReceivedGUI();
         showSendMessageGUI();
@@ -98,6 +105,17 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
             PharmacyDetails pharFrag = new PharmacyDetails();
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.linerarLayout, pharFrag).commit();
+        }
+        else if (id == R.id.nav_logout)
+        {
+//            firebaseAuth.getCurrentUser();
+//            String i = firebaseAuth.getCurrentUser().getUid();
+//            firebaseAuth.signOut();
+//            Intent intent = new Intent(CustomerMainGUI.this, Login.class);
+//            startActivity(intent);
+//            String j = firebaseAuth.getCurrentUser().getUid();
+//            Log.d("CusMainGUI", "onNavigationItemSelected: " +  i);
+//            Log.d("CusMainGUI", "onNavigationItemSelected: " +  j);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.CusMainDrawer);

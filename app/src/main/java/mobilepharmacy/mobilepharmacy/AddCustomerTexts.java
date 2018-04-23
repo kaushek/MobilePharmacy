@@ -10,17 +10,19 @@ public class AddCustomerTexts {
     private String from;
     private String subject;
     private String notes;
+    private String ImgKey;
 
     AddCustomerTexts(){
 
     }
 
-    public AddCustomerTexts(String TO, String FROM, String SUBJECT, String NOTES)
+    public AddCustomerTexts(String TO, String FROM, String SUBJECT, String NOTES, String key)
     {
         this.to = TO;
         this.from = FROM;
         this.subject = SUBJECT;
         this.notes = NOTES;
+        this.ImgKey = key;
     }
 
     public String getTo() {
@@ -53,5 +55,13 @@ public class AddCustomerTexts {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getImgKey() {
+        return ImgKey;
+    }
+
+    public void setImgKey(String imgKey) {
+        ImgKey = imgKey;
     }
 }
