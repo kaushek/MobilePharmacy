@@ -51,7 +51,7 @@ public class CustomerListView extends AppCompatActivity {
                 for(DataSnapshot ds: dataSnapshot.getChildren() )
                 {
                     customer = ds.getValue(AddCustomer.class);
-                    list.add(customer.getFname().toString() + " " + customer.getLname().toString() + "\n" + customer.getAdd().toString() );
+                    list.add(customer.getFname().toString() + " " + customer.getLname().toString() + "\n" + customer.getNum());
                     customerList.add(customer);
                 }
                 listView.setAdapter(adapter);

@@ -1,8 +1,12 @@
 package mobilepharmacy.mobilepharmacy;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -13,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerPopUp extends AppCompatActivity {
 
@@ -22,6 +27,7 @@ public class CustomerPopUp extends AppCompatActivity {
 
     ArrayList<String> list;
     ArrayAdapter<String> adapter;
+    private List<AddCustomer> customerList = new ArrayList<>();
 
     AddCustomer customer;
     @Override
@@ -35,7 +41,7 @@ public class CustomerPopUp extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width),(int)(height*.6));
+        getWindow().setLayout((int)(width),(int)(height*.7));
 
         listView = (ListView)findViewById(R.id.custListVw);
         database = FirebaseDatabase.getInstance();
@@ -51,10 +57,20 @@ public class CustomerPopUp extends AppCompatActivity {
                 for(DataSnapshot ds: dataSnapshot.getChildren() )
                 {
                     customer = ds.getValue(AddCustomer.class);
-                    list.add(customer.getFname().toString() + " " + customer.getLname().toString() + "\n" + customer.getAdd().toString() );
+                    Log.d("CustomerPopUp", "onDataChange: " + customer.getLat());
+                    list.add(customer.getFname().toString() + " " + customer.getLname().toString()  );
+                    customerList.add(customer);
 
                 }
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(CustomerPopUp.this, MapsActivity.class);
+                        intent.putExtra("CustomerData", customerList.get(position));
+                        startActivity(intent);
+                    }
+                });
             }
 
             @Override

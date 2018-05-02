@@ -1,7 +1,10 @@
 package mobilepharmacy.mobilepharmacy;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -16,7 +19,7 @@ import java.util.List;
 
 public class MessageListView extends AppCompatActivity {
 
-    ListView listView;
+    ListView listViewMessage;
     FirebaseDatabase database;
     DatabaseReference reference;
 
@@ -32,7 +35,7 @@ public class MessageListView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_list_view);
 
-        listView = (ListView)findViewById(R.id.messageListView);
+        listViewMessage = (ListView)findViewById(R.id.messageListView);
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("AddMessageItems");
 
@@ -52,7 +55,16 @@ public class MessageListView extends AppCompatActivity {
                     customerMessageList.add(custText);
 
                 }
-                listView.setAdapter(adapter);
+                listViewMessage.setAdapter(adapter);
+                listViewMessage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(MessageListView.this, ShowMessages.class);
+                        intent.putExtra("MessageData", customerMessageList.get(position));
+                        startActivity(intent);
+                    }
+                });
+
             }
 
             @Override

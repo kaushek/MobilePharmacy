@@ -1,28 +1,32 @@
 package mobilepharmacy.mobilepharmacy;
 
+import java.io.Serializable;
+
 /**
  * Created by Kaushek on 26/02/2018.
  */
 
-public class AddCustomerTexts {
+public class AddCustomerTexts implements Serializable{
 
     private String to;
     private String from;
     private String subject;
     private String notes;
     private String ImgKey;
+    private String url;
 
     AddCustomerTexts(){
 
     }
 
-    public AddCustomerTexts(String TO, String FROM, String SUBJECT, String NOTES, String key)
+    public AddCustomerTexts(String TO, String FROM, String SUBJECT, String NOTES, String key, String imgUrl)
     {
         this.to = TO;
         this.from = FROM;
         this.subject = SUBJECT;
         this.notes = NOTES;
         this.ImgKey = key;
+        this.url = imgUrl;
     }
 
     public String getTo() {
@@ -63,5 +67,13 @@ public class AddCustomerTexts {
 
     public void setImgKey(String imgKey) {
         ImgKey = imgKey;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

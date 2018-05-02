@@ -35,6 +35,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +46,9 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    private MarkerOptions mrkOpt = new MarkerOptions();
+    private LatLng lalg;
 
     private static final String TAG = "MapsActivity";
     private static final int Error_Dialog_Request = 901;
@@ -62,20 +67,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean permissionGranted = false;
     private FusedLocationProviderClient locationProviderClient;
 
+    FirebaseDatabase database;
+    DatabaseReference reference;
+    AddCustomer customer;
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
+        mMap = googleMap;
+
+        if (permissionGranted) {
+            getDeviceLocation();
+
+            if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            }
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            try {
+                database = FirebaseDatabase.getInstance();
+                reference = database.getReference("Customers");
+
+                customer= (AddCustomer) getIntent().getSerializableExtra("CustomerData");
+                lalg = new LatLng(customer.getLat(), customer.getLng());
+                Log.d(TAG, "onCreate: " + customer.getLat() +" " + customer.getLng());
+                mrkOpt.position(lalg);
+                mrkOpt.title(customer.getFname() + customer.getLname());
+
+                mMap.addMarker(mrkOpt);
+
+
+
+//            mMap.addMarker(new MarkerOptions().position(new LatLng(customer.getLat(), customer.getLng())).title(customer.getFname() + customer.getLname()));
+
+            }catch (NullPointerException ex)
+            {
+                Log.d(TAG, "onCreate: " + ex.getMessage());
+            }
+            init();
+        }
+
+        // Add a marker in Sydney and move the camera
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+
 
         search = (EditText)findViewById(R.id.SearchText);
         gps =(ImageView) findViewById(R.id.GpsBtn);
         cust = (ImageView)findViewById(R.id.CusBtn);
 
         isServiceFine();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
+
         getLocationPermission();
 
         cust.setOnClickListener(new View.OnClickListener() {
@@ -144,30 +194,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is ready", Toast.LENGTH_SHORT).show();
-        mMap = googleMap;
 
-        if (permissionGranted) {
-            getDeviceLocation();
-
-            if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
-            }
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-            init();
-        }
-
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
 
 
 

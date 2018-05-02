@@ -223,6 +223,8 @@ public class Login extends AppCompatActivity {
 //                    String s = getIntent().getExtras().getString("CustomerRole");
                     Intent intent = new Intent(Login.this,CustomerMainGUI.class);
                     startActivity(intent);
+//                    Intent intent2 = new Intent(Login.this,SendMessageGUI.class);
+//                    intent2.putExtra("CustomerDetails", customer);
                 }
 
 

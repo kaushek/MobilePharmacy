@@ -14,16 +14,16 @@ public class AddCustomer implements Serializable {
     private String pass;
     private String confPass;
     private int num;
-    private String add;
-    private String ccity;
-    private String carea;
+    Double lat;
+    Double lng;
+
 
     AddCustomer()
     {
 
     }
 
-    public AddCustomer(String FName, String LName, String EMail, String PWD, String CONFPWD, int NUM, String ADD, String CCity, String CArea)
+    public AddCustomer(String FName, String LName, String EMail, String PWD, String CONFPWD, int NUM, Double latitude, Double longtitude)
     {
         this.fname = FName;
         this.lname = LName;
@@ -31,9 +31,9 @@ public class AddCustomer implements Serializable {
         this.pass = PWD;
         this.confPass = CONFPWD;
         this.num = NUM;
-        this.add = ADD;
-        this.ccity = CCity;
-        this.carea = CArea;
+        this.lat = latitude;
+        this.lng = longtitude;
+
     }
 
     public String getFname() {
@@ -84,27 +84,20 @@ public class AddCustomer implements Serializable {
         this.num = num;
     }
 
-    public String getAdd() {
-        return add;
+    public Double getLat() {
+        return lat;
     }
 
-    public void setAdd(String add) {
-        this.add = add;
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
 
-    public String getCcity() {
-        return ccity;
+    public Double getLng() {
+        return lng;
     }
 
-    public void setCcity(String ccity) {
-        ccity = ccity;
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 
-    public String getCarea() {
-        return carea;
-    }
-
-    public void setCarea(String carea) {
-        this.carea = carea;
-    }
 }
