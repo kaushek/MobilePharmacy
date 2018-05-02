@@ -3,9 +3,11 @@ package mobilepharmacy.mobilepharmacy;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -29,26 +32,41 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import static mobilepharmacy.mobilepharmacy.R.id.map;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    ArrayList markerPoints= new ArrayList();
 
     private MarkerOptions mrkOpt = new MarkerOptions();
     private LatLng lalg;
+    private LatLng colombo;
+//    private LatLng lalg2;
 
     private static final String TAG = "MapsActivity";
     private static final int Error_Dialog_Request = 901;
@@ -93,25 +111,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lalg = new LatLng(customer.getLat(), customer.getLng());
                 Log.d(TAG, "onCreate: " + customer.getLat() +" " + customer.getLng());
                 mrkOpt.position(lalg);
-                mrkOpt.title(customer.getFname() + customer.getLname());
-
+                mrkOpt.title(customer.getFname() + " " + customer.getLname());
+                markerPoints.add(lalg);
                 mMap.addMarker(mrkOpt);
-
-
-
-//            mMap.addMarker(new MarkerOptions().position(new LatLng(customer.getLat(), customer.getLng())).title(customer.getFname() + customer.getLname()));
-
+                
             }catch (NullPointerException ex)
             {
                 Log.d(TAG, "onCreate: " + ex.getMessage());
             }
             init();
+            mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                @Override
+                public void onMapLoaded() {
+
+                    try {
+                        if (permissionGranted) {
+                            final Task location = locationProviderClient.getLastLocation();
+                            location.addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+                                    if (task.isSuccessful()) {
+                                        Location currentLocation = (Location) task.getResult();
+                                        colombo = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())/* new LatLng(6.927079, 79.861244))*/;
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(colombo, Default_Zoom));
+                                        mMap.addMarker(new MarkerOptions().position(colombo));
+                                        markerPoints.add(colombo);
+
+
+
+                                        if (markerPoints.size() ==2) {
+
+                                            LatLng origin = colombo;
+                                            LatLng dest = lalg;
+
+                                            // Getting URL to the Google Directions API
+                                            String url = getDirectionsUrl(origin, dest);
+
+                                            DownloadTask downloadTask = new DownloadTask();
+
+                                            // Start downloading json data from Google Directions API
+                                            downloadTask.execute(url);
+                                        }
+
+                                    } else {
+                                        Toast.makeText(MapsActivity.this, "Unable to find the current location", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+
+                    } catch (SecurityException ex) {
+                        Log.d(TAG, "getDeviceLocation: SecurityException : " + ex.getMessage());
+
+                    }
+
+                }
+            });
+
+
         }
 
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,10 +210,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Location currentLocation = (Location) task.getResult();
                             LatLng colombo = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())/* new LatLng(6.927079, 79.861244))*/;
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(colombo, Default_Zoom));
-                  //          mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-
-
-                         //   mMap.setMy
 
                         } else {
                             Toast.makeText(MapsActivity.this, "Unable to find the current location", Toast.LENGTH_SHORT).show();
@@ -167,6 +223,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+
 
 
    /* public void moveCam(LatLng latLng, float zoom) {
@@ -228,7 +286,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(map);
         mapFragment.getMapAsync(this);
     }
 
@@ -322,5 +380,151 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private class DownloadTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... url) {
+
+            String data = "";
+
+            try {
+                data = downloadUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+
+            parserTask.execute(result);
+
+        }
+    }
+
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
+
+                routes = parser.parse(jObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+            ArrayList points = null;
+            PolylineOptions lineOptions = null;
+            MarkerOptions markerOptions = new MarkerOptions();
+
+            for (int i = 0; i < result.size(); i++) {
+                points = new ArrayList();
+                lineOptions = new PolylineOptions();
+
+                List<HashMap<String, String>> path = result.get(i);
+
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+
+                lineOptions.addAll(points);
+                lineOptions.width(12);
+                lineOptions.color(Color.RED);
+                lineOptions.geodesic(true);
+
+            }
+
+// Drawing polyline in the Google Map for the i-th route
+            mMap.addPolyline(lineOptions);
+        }
+    }
+
+    private String getDirectionsUrl(LatLng origin, LatLng dest) {
+
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+        String mode = "mode=driving";
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+
+
+        return url;
+    }
+
+    /**
+     * A method to download json data from url
+     */
+    private String downloadUrl(String strUrl) throws IOException {
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(strUrl);
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.connect();
+
+            iStream = urlConnection.getInputStream();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+            StringBuffer sb = new StringBuffer();
+
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            data = sb.toString();
+
+            br.close();
+
+        } catch (Exception e) {
+            Log.d("Exception", e.toString());
+        } finally {
+            iStream.close();
+            urlConnection.disconnect();
+        }
+        return data;
+    }
 
 }
+

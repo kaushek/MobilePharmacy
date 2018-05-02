@@ -42,6 +42,7 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallback {
@@ -88,10 +89,13 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
 
     private FirebaseAuth firebaseAuth;
 
+    ArrayList<LatLng> markerPoints;
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        markerPoints = new ArrayList<LatLng>();
 
         if (permissionGranted) {
             getDeviceLocation();
@@ -105,6 +109,12 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
+                    if(markerPoints.size()>1){
+                        markerPoints.clear();
+                        mMap.clear();
+                    }
+
+                    markerPoints.add(latLng);
 //                    LatLng addr = new LatLng(address.getLatitude(), address.getLongitude())/* new LatLng(6.927079, 79.861244))*/;
 //                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(addr, Default_Zoom));
 //                    mMap.addMarker(new MarkerOptions().position(addr).title(addr.toString()));
@@ -112,7 +122,10 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
                     LatLng location = new LatLng(latLng.latitude, latLng.longitude);
                     lat = location.latitude;
                     lng = location.longitude;
-                    mMap.addMarker(new MarkerOptions().title("Home").position(location));
+
+                    if(markerPoints.size()==1) {
+                        mMap.addMarker(new MarkerOptions().title("Home").position(location));
+                    }
                     Log.d(TAG, "onMapLongClick: Lat: " + lat + "Lng: " + lng);
                 }
             });

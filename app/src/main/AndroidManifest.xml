@@ -43,7 +43,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -59,7 +58,8 @@
         <activity android:name=".custLayout" />
         <activity android:name=".ShowCustomer" />
         <activity android:name=".CustomerSignUp" />
-        <activity android:name=".ShowMessages"></activity>
+        <activity android:name=".ShowMessages" />
+        <activity android:name=".ReplyCustomer"></activity>
     </application>
 
 </manifest>

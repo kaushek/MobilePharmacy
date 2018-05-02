@@ -1,8 +1,11 @@
 package mobilepharmacy.mobilepharmacy;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +16,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class ShowMessages extends AppCompatActivity {
+import java.io.Serializable;
+
+public class ShowMessages extends AppCompatActivity implements Serializable {
 
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -23,9 +28,12 @@ public class ShowMessages extends AppCompatActivity {
 
     AddCustomerTexts CustomerMessages;
 
-    private TextView frm;
+    public static TextView frm;
     private EditText notes;
     private ImageView viewPresciption;
+    private Button sendReply;
+
+
 
 
     @Override
@@ -58,6 +66,16 @@ public class ShowMessages extends AppCompatActivity {
         viewPresciption.getDisplay();
 //        viewPresciption.setImageURI(SendMessageGUI.FILE_PATH);
 //        viewPresciption.setImageBitmap();
+
+        sendReply = (Button) findViewById(R.id.replyMessageBtn);
+        sendReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShowMessages.this, ReplyCustomer.class);
+//                intent.putExtra("CustomerName", CustomerMessages.getFrom());
+                startActivity(intent);
+            }
+        });
 
     }
 }
