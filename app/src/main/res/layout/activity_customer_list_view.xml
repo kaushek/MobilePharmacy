@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="mobilepharmacy.mobilepharmacy.CustomerListView">
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/cusListView"
         android:layout_width="352dp"
         android:layout_height="493dp"

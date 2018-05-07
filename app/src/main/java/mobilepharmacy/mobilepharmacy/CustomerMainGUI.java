@@ -13,13 +13,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class CustomerMainGUI extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener   {
 
-    public Button but1;
-    public Button but2;
+    public ImageButton but1;
+    public ImageButton but2;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -28,7 +29,7 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
 
     public void showReceivedGUI()
     {
-        but1 = (Button)findViewById(R.id.inboxButton);
+        but1 = (ImageButton) findViewById(R.id.inboxButton);
         but1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,7 +41,7 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
 
     public void showSendMessageGUI()
     {
-        but2 = (Button)findViewById(R.id.sendPrescription);
+        but2 = (ImageButton) findViewById(R.id.sendPrescription);
         but2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

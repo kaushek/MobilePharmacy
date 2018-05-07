@@ -14,4 +14,9 @@
         <item>Delivery Man</item>
         <item>Pharmacist</item>
     </string-array>
+
+    <string-array name="pharmacistReply">
+        <item>Your order has been dispatched</item>
+        <item>Sorry. Stocks are not available at the moment</item>
+    </string-array>
 </resources>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 
 /**
@@ -16,8 +17,8 @@ import android.widget.Button;
 public class CustMainGUIFragment extends Fragment {
 
 
-    public Button but1;
-    public Button but2;
+    public ImageButton but1;
+    public ImageButton but2;
 
     public CustMainGUIFragment() {
         // Required empty public constructor
@@ -29,7 +30,7 @@ public class CustMainGUIFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cust_main_gui, container, false);
-        but1 = (Button)view.findViewById(R.id.sendPres);
+        but1 = (ImageButton) view.findViewById(R.id.sendPres);
         but1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,7 +40,7 @@ public class CustMainGUIFragment extends Fragment {
             }
         });
 
-        but2 = (Button)view.findViewById(R.id.inbox);
+        but2 = (ImageButton) view.findViewById(R.id.inbox);
         but2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

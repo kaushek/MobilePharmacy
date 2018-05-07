@@ -14,22 +14,22 @@
         android:baselineAligned="false"
         android:orientation="vertical">
 
-        <Button
+        <ImageButton
             android:id="@+id/sendPrescription"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Send Prescrption"
+            android:background="@drawable/imagebtnborder"
+            android:src="@drawable/sendmessage"
             tools:ignore="HardcodedText" />
 
-        <Button
+        <ImageButton
             android:id="@+id/inboxButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Inbox"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"
-            tools:text="Inbox"
+            android:background="@drawable/imagebtnborder"
+            android:src="@drawable/receive"
             tools:ignore="HardcodedText" />
 
 

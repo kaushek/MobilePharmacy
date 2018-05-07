@@ -32,6 +32,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Login extends AppCompatActivity {
 
 //    private Button btnSignup;
@@ -45,9 +48,15 @@ public class Login extends AppCompatActivity {
     DatabaseReference reference;
 //    private Button check;
 
-    AddDeliveryMan addDeliveryMan;
+    AddDeliveryMan Employees;
     AddCustomer customer;
+//    RegisterEmployee registerEmployee;
     final AddDeliveryMan deliveryMan = new AddDeliveryMan();
+
+    private static final String EMAIL_REGEX = "^(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+    private Boolean b;
+
+    private List<RegisterEmployee> Employee = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,35 +107,38 @@ public class Login extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog progressDialog = ProgressDialog.show(Login.this, "Please wait..", "You are signing in", true);
+
 
                 Log.d("check user info", "onComplete: " + "Test");
 
-                firebaseAuth.signInWithEmailAndPassword(username.getText().toString(), password.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressDialog.dismiss();
-                                if(task.isSuccessful())
-                                {
-                                    users = firebaseAuth.getCurrentUser();
-                                    getUserDetails();
+                b = (username.getText().toString()).matches(EMAIL_REGEX);
+
+//                if (b == true && username.getText() != null && password.getText() != null) {
+                    final ProgressDialog progressDialog = ProgressDialog.show(Login.this, "Please wait..", "You are signing in", true);
+
+                    firebaseAuth.signInWithEmailAndPassword(username.getText().toString(), password.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progressDialog.dismiss();
+                                    if (task.isSuccessful()) {
+                                        users = firebaseAuth.getCurrentUser();
+                                        getUserDetails();
+                                    } else {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                                        builder.setTitle("Login Failed");
+                                        builder.setMessage("Username or Password is incorrect.");
+
+                                        // add a button
+                                        builder.setPositiveButton("OK", null);
+
+                                        // create and show the alert dialog
+                                        AlertDialog dialog = builder.create();
+                                        dialog.show();
+                                    }
                                 }
-                                else {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-                                    builder.setTitle("Login Failed");
-                                    builder.setMessage("Username or Password is incorrect.");
 
-                                    // add a button
-                                    builder.setPositiveButton("OK", null);
-
-                                    // create and show the alert dialog
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
-                                }
-                            }
-
-                        });
+                            });
 //                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 //                            @Override
 //                            public void onComplete(@NonNull Task<AuthResult> task) {
@@ -186,7 +198,13 @@ public class Login extends AppCompatActivity {
 //                        });
 
 
-                loginFunction(username.getText().toString(), password.getText().toString());
+                    loginFunction(username.getText().toString(), password.getText().toString());
+
+//                }
+//
+//                else {
+//                    Toast.makeText(Login.this, "Please provide a valid Email address", Toast.LENGTH_SHORT).show();
+//                }
 
             }
         });
@@ -216,8 +234,16 @@ public class Login extends AppCompatActivity {
                     Intent intent = new Intent(Login.this,MapsActivity.class);
                     startActivity(intent);
                 }else if (user.getJobRole().equals("Pharmacist")){
-                    Intent intent = new Intent(Login.this,PharmacistMainGUI.class);
+                    Intent intent = new Intent(Login.this, PharmacistMainGUI.class);
                     startActivity(intent);
+
+
+                        Employees = new AddDeliveryMan();
+                        Intent intent1 = new Intent(Login.this, PharmacistMyAccount.class);
+//                        Employee.add(registerEmployee);
+                        intent1.putExtra("PharmacistDetails", Employees);
+
+
                 }
                 else if (user.getJobRole().equals("Customer")){
 //                    String s = getIntent().getExtras().getString("CustomerRole");

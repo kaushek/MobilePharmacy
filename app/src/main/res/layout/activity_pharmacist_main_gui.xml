@@ -20,21 +20,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/inbox" />
+            android:background="@drawable/imagebtnborder"
+            app:srcCompat="@drawable/receive" />
 
         <ImageButton
             android:id="@+id/customerDetails"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@drawable/imagebtnborder"
             app:srcCompat="@drawable/customers" />
 
-        <ImageButton
-            android:id="@+id/sendmessage"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/send" />
+
     </LinearLayout>
 
     <android.support.design.widget.NavigationView

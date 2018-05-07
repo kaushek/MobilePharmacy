@@ -23,7 +23,7 @@
         android:layout_marginEnd="8dp" />
 
     <TextView
-        android:id="@+id/ToTV"
+        android:id="@+id/toTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -56,7 +56,7 @@
         android:layout_marginEnd="8dp" />
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/frmTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pharmacy"
@@ -85,7 +85,7 @@
         android:layout_marginEnd="8dp" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/subjectspnr"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -96,6 +96,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintVertical_bias="0.359"
+        android:entries="@array/pharmacistReply"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
@@ -115,29 +116,33 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.21"
-        app:layout_constraintVertical_bias="0.49" />
-
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/sendreplyBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="Send"
+        android:background="@drawable/button_corner"
+        android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.691" />
+        app:layout_constraintVertical_bias="0.965" />
+
+    <EditText
+        android:id="@+id/messageEtxt"
+        android:layout_width="330dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.21"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.768" />
 </android.support.constraint.ConstraintLayout>

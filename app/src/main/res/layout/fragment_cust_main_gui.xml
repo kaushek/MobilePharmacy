@@ -15,22 +15,22 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <Button
+        <ImageButton
             android:id="@+id/sendPres"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Send Prescrption"
+            android:background="@drawable/imagebtnborder"
+            android:src="@drawable/sendmessage"
             tools:ignore="HardcodedText" />
 
-        <Button
+        <ImageButton
             android:id="@+id/inbox"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Inbox"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"
-            tools:text="Inbox"
+            android:background="@drawable/imagebtnborder"
+            android:src="@drawable/receive"
             tools:ignore="HardcodedText" />
 
 

@@ -1,10 +1,12 @@
 package mobilepharmacy.mobilepharmacy;
 
+import java.io.Serializable;
+
 /**
  * Created by Kaushek on 14/04/2018.
  */
 
-public class AddDeliveryMan {
+public class AddDeliveryMan implements Serializable{
 
     private String empName;
     private String empJbRole;

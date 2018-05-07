@@ -34,7 +34,7 @@ public class SendMessageGUI extends AppCompatActivity {
 //    AddCustomer customer;
 
     private Button choose;
-    private ImageButton sendAll;
+    private Button sendAll;
     private ImageView presView;
 
     private EditText to;
@@ -81,7 +81,7 @@ public class SendMessageGUI extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         choose = (Button)findViewById(R.id.attach);
-        sendAll = (ImageButton)findViewById(R.id.sendDetailsImgBtn);
+        sendAll = (Button) findViewById(R.id.sendDetailsImgBtn);
         presView = (ImageView)findViewById(R.id.prescreptionView);
         to = (EditText)findViewById(R.id.toTxt);
         from = (EditText)findViewById(R.id.fromTxt);

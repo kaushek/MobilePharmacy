@@ -114,7 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mrkOpt.title(customer.getFname() + " " + customer.getLname());
                 markerPoints.add(lalg);
                 mMap.addMarker(mrkOpt);
-                
+
             }catch (NullPointerException ex)
             {
                 Log.d(TAG, "onCreate: " + ex.getMessage());

@@ -1,17 +1,30 @@
 package mobilepharmacy.mobilepharmacy;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.app.NotificationManager;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 public class PharmacistMainGUI extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -21,10 +34,64 @@ public class PharmacistMainGUI extends AppCompatActivity implements NavigationVi
 
     private DrawerLayout drawerLayout2;
     private ActionBarDrawerToggle toggle2;
+
+    FirebaseDatabase database;
+    DatabaseReference reference;
+
+    AddCustomerTexts CustomerMessages;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pharmacist_main_gui);
+
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference("AddMessageItems");
+
+        CustomerMessages = new AddCustomerTexts();
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                for(DataSnapshot ds: dataSnapshot.getChildren()) {
+//                    Log.d("PharmacistMainGUI: ", "onChildAdded: Datasnapshot: " + ds);
+//                    CustomerMessages = ds.getValue(AddCustomerTexts.class);
+//                    s = CustomerMessages.getFrom();
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                    Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(PharmacistMainGUI.this)
+                            .setContentTitle("Prescription Received from " + s).setSmallIcon(R.drawable.messageicon).setSound(defaultSoundUri);
+
+                    notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
+                }
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         but1 = (ImageButton)findViewById(R.id.receivedMessage);
         but1.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +124,8 @@ public class PharmacistMainGUI extends AppCompatActivity implements NavigationVi
 
 
     }
+
+
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if(toggle2.onOptionsItemSelected(item))

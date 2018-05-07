@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegisterEmployee extends Fragment {
+public class RegisterEmployee extends Fragment implements Serializable{
     private EditText empName;
     private Spinner empJobRole;
     private EditText empUserName;
@@ -49,6 +51,9 @@ public class RegisterEmployee extends Fragment {
     FirebaseAuth firebaseAuth;
 
     private List<AddDeliveryMan> DmanList = new ArrayList<>();
+
+    private static final String EMAIL_REGEX = "^(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+    Boolean b;
 
     public RegisterEmployee() {
         // Required empty public constructor
@@ -78,30 +83,50 @@ public class RegisterEmployee extends Fragment {
                 UsernameEmp = empUserName.getText().toString();
                 PasswordEmp = empPassword.getText().toString();
 
-                AddToDB(NameEmp, JobRoleEmp, UsernameEmp, PasswordEmp);
-                firebaseAuth.createUserWithEmailAndPassword(UsernameEmp, PasswordEmp).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                b = (empUserName.getText().toString()).matches(EMAIL_REGEX);
+
+                if (NameEmp != null || JobRoleEmp != null || UsernameEmp != null || PasswordEmp != null) {
+
+                    if (b == true) {
+
+                        try {
+
+                            AddToDB(NameEmp, JobRoleEmp, UsernameEmp, PasswordEmp);
+                            firebaseAuth.createUserWithEmailAndPassword(UsernameEmp, PasswordEmp).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 //                        progressDialog.dismiss();
-                        if(task.isSuccessful())
-                        {
+                                    if (task.isSuccessful()) {
 //                            Toast.makeText(CustomerSignUp.this, "Registration successful", Toast.LENGTH_SHORT).show();
 //                            Intent intent = new Intent(CustomerSignUp.this, Login.class);
 //                            startActivity(intent);
-                            UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
-                            String userId = userInfo.getUid();
-                            addUserRoletoDB(userId, JobRoleEmp);
-                        }
-                        else {
-//                            log.e("ERROR: CustomerSignUp: ", task.getException().toString());
-                            Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                                        UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
+                                        String userId = userInfo.getUid();
+                                        addUserRoletoDB(userId, JobRoleEmp);
+                                        ClearFields();
+                                        Toast.makeText(getActivity(), "Registration Successful.", Toast.LENGTH_SHORT).show();
+                                    } else {
+//                                    Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
 
-                            FirebaseAuthException e = (FirebaseAuthException )task.getException();
-                            Toast.makeText(getActivity(), "Failed Registration: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                                        Toast.makeText(getActivity(), "Failed to register: " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
+                                    }
+                                }
+                            });
+                        } catch (Exception Ex) {
+                            Toast.makeText(getActivity(), "Please fill the empty fields.", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                    else
+                    {
+                        Toast.makeText(getActivity(), "Please provide a valid email address", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Please provide some values", Toast.LENGTH_SHORT).show();
+                }
 //                try {
 //                    firebaseAuth.createUserWithEmailAndPassword(UsernameEmp, PasswordEmp)
 //                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -149,6 +174,15 @@ public class RegisterEmployee extends Fragment {
     {
         UserRole userRole = new UserRole(jbrole);
         databaseReference.child("UserRole").child(userId).setValue(userRole);
+    }
+
+    public void ClearFields()
+    {
+        empName.setText("");
+//        empJobRole;
+        empUserName.setText("");
+        empPassword.setText("");
+
     }
 
 }
