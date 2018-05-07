@@ -1,4 +1,4 @@
-package mobilepharmacy.mobilepharmacy;
+package model;
 
 import java.io.Serializable;
 
@@ -6,22 +6,33 @@ import java.io.Serializable;
  * Created by Kaushek on 14/04/2018.
  */
 
-public class AddDeliveryMan implements Serializable{
+public class AddEmployees implements Serializable{
 
     private String empName;
     private String empJbRole;
     private String empUname;
     private String empPass;
+    private String empId;
 
-    AddDeliveryMan(){}
+    public AddEmployees(){}
 
-    public AddDeliveryMan(String eName, String ERole, String EuName, String Epass)
-    {
-        this.empName = eName;
-        this.empJbRole = ERole;
-        this.empUname = EuName;
-        this.empPass = Epass;
+    public String getEmpId() {
+        return empId;
     }
+
+    public void setEmpId(String empId) {
+        this.empId = empId;
+    }
+
+    public AddEmployees(String empName, String empJbRole, String empUname, String empPass, String empId) {
+
+        this.empName = empName;
+        this.empJbRole = empJbRole;
+        this.empUname = empUname;
+        this.empPass = empPass;
+        this.empId = empId;
+    }
+
 
     public String getEmpName() {
         return empName;

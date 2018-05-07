@@ -1,4 +1,4 @@
-package mobilepharmacy.mobilepharmacy;
+package model;
 
 /**
  * Created by Kaushek on 25/02/2018.

@@ -1,4 +1,4 @@
-package mobilepharmacy.mobilepharmacy;
+package model;
 
 import java.io.Serializable;
 
@@ -15,7 +15,7 @@ public class AddCustomerTexts implements Serializable{
     private String ImgKey;
     private String url;
 
-    AddCustomerTexts(){
+    public AddCustomerTexts(){
 
     }
 

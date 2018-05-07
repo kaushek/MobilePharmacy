@@ -1,10 +1,12 @@
-package mobilepharmacy.mobilepharmacy;
+package activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
-public class custLayout extends AppCompatActivity {
+import mobilepharmacy.mobilepharmacy.R;
+
+public class custLayoutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

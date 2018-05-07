@@ -18,6 +18,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 
+import model.AddCustomerTexts;
+
 public class ShowMessages extends AppCompatActivity implements Serializable {
 
     FirebaseDatabase database;
@@ -32,10 +34,6 @@ public class ShowMessages extends AppCompatActivity implements Serializable {
     private EditText notes;
     private ImageView viewPresciption;
     private Button sendReply;
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

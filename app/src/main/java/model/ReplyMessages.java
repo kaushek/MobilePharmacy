@@ -1,10 +1,10 @@
-package mobilepharmacy.mobilepharmacy;
+package model;
 
 /**
  * Created by Kaushek on 07/05/2018.
  */
 
-class ReplyMessages {
+public class ReplyMessages {
 
     private String To;
     private String frm;

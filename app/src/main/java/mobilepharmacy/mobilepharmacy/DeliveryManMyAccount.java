@@ -1,18 +1,15 @@
 package mobilepharmacy.mobilepharmacy;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -20,11 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import model.AddEmployees;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class PharmacistMyAccount extends Fragment {
+public class DeliveryManMyAccount extends AppCompatActivity {
 
     private EditText name;
     private EditText email;
@@ -42,24 +35,22 @@ public class PharmacistMyAccount extends Fragment {
     private static String empPass;
     private static String userID;
 
-    public PharmacistMyAccount() {
-        // Required empty public constructor
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_pharmacist_my_account, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_delivery_man_my_account);
 
-        name = (EditText)view.findViewById(R.id.PharAccNameEtxt);
-        email = (EditText)view.findViewById(R.id.PharAccEmailEtxt);
-        password = (EditText)view.findViewById(R.id.PharAccPassEtxt);
-        edit = (Button)view.findViewById(R.id.PharAccEditBtn);
-        save = (Button)view.findViewById(R.id.PharAccSaveBtn);
+        firebaseDatabase = firebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        retreiveSharedVariableValues(getActivity());
+        name = (EditText)findViewById(R.id.DelSetNameEtxt);
+        email = (EditText) findViewById(R.id.DelSetEmailEtxt);
+        password = (EditText)findViewById(R.id.DelSetPasswordEtxt);
+        edit = (Button)findViewById(R.id.DelSetEditBtn);
+        save = (Button)findViewById(R.id.DelSetSaveBtn);
+
+        retreiveSharedVariableValues(DeliveryManMyAccount.this);
         name.setText(empname);
         email.setText(empUname);
         password.setText(empPass);
@@ -87,7 +78,7 @@ public class PharmacistMyAccount extends Fragment {
                             email.setEnabled(false);
                             password.setEnabled(false);
                             save.setEnabled(false);
-                            getSharedPreference(userID, name.getText().toString(), email.getText().toString(), password.getText().toString(),getActivity());
+                            getSharedPreference(userID, name.getText().toString(), email.getText().toString(), password.getText().toString(), DeliveryManMyAccount.this);
                         }
                     });
                 }
@@ -96,7 +87,6 @@ public class PharmacistMyAccount extends Fragment {
             }
         });
 
-        return view;
     }
 
     private void UpdateDatabase(Object AddEmployees)
@@ -123,14 +113,6 @@ public class PharmacistMyAccount extends Fragment {
         return true;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        firebaseDatabase = firebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-    }
 
     public static void getSharedPreference(String id,String name, String email, String pass,Context context){
         SharedPreferences preferences  = PreferenceManager.getDefaultSharedPreferences(context);

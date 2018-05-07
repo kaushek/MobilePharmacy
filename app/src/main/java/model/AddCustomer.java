@@ -1,4 +1,4 @@
-package mobilepharmacy.mobilepharmacy;
+package model;
 
 import java.io.Serializable;
 
@@ -16,24 +16,33 @@ public class AddCustomer implements Serializable {
     private int num;
     Double lat;
     Double lng;
+    String userID;
 
 
-    AddCustomer()
+    public AddCustomer()
     {
 
     }
 
-    public AddCustomer(String FName, String LName, String EMail, String PWD, String CONFPWD, int NUM, Double latitude, Double longtitude)
-    {
-        this.fname = FName;
-        this.lname = LName;
-        this.email = EMail;
-        this.pass = PWD;
-        this.confPass = CONFPWD;
-        this.num = NUM;
-        this.lat = latitude;
-        this.lng = longtitude;
+    public String getUserID() {
+        return userID;
+    }
 
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public AddCustomer(String fname, String lname, String email, String pass, String confPass, int num, Double lat, Double lng, String userID) {
+
+        this.fname = fname;
+        this.lname = lname;
+        this.email = email;
+        this.pass = pass;
+        this.confPass = confPass;
+        this.num = num;
+        this.lat = lat;
+        this.lng = lng;
+        this.userID = userID;
     }
 
     public String getFname() {

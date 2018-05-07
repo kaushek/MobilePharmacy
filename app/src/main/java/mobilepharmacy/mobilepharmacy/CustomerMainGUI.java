@@ -1,6 +1,9 @@
 package mobilepharmacy.mobilepharmacy;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -109,18 +112,29 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
         }
         else if (id == R.id.nav_logout)
         {
-//            firebaseAuth.getCurrentUser();
-//            String i = firebaseAuth.getCurrentUser().getUid();
-//            firebaseAuth.signOut();
-//            Intent intent = new Intent(CustomerMainGUI.this, Login.class);
-//            startActivity(intent);
-//            String j = firebaseAuth.getCurrentUser().getUid();
-//            Log.d("CusMainGUI", "onNavigationItemSelected: " +  i);
-//            Log.d("CusMainGUI", "onNavigationItemSelected: " +  j);
+            getSharedPreference(this);
+            Intent intent = new Intent(this,Login.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.CusMainDrawer);
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public static void getSharedPreference(Context context){
+        SharedPreferences preferences  = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear().commit();
+
+        Log.d("Checking","CheckingSharedPreference"+preferences.getString("USERJOBROLE",null));
     }
 }

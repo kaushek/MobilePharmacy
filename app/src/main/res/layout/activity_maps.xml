@@ -64,4 +64,27 @@
         android:scaleType="centerCrop"
         android:id="@+id/CusBtn"
         android:src="@drawable/ic_customer"/>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/GpsBtn"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/DeliveryLogout"
+        android:src="@drawable/ic_logout"/>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/CusBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/DeliverySettings"
+        android:src="@drawable/ic_settings"/>
+
 </RelativeLayout>

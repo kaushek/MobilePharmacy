@@ -1,22 +1,23 @@
 package mobilepharmacy.mobilepharmacy;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -32,9 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -55,7 +54,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import model.AddCustomer;
+
 import static mobilepharmacy.mobilepharmacy.R.id.map;
+import static mobilepharmacy.mobilepharmacy.R.id.start;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -80,6 +82,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private EditText search;
     private ImageView gps;
     private ImageView cust;
+    private ImageView logout;
+    private ImageView settings;
 
     //variables
     private boolean permissionGranted = false;
@@ -183,6 +187,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         search = (EditText)findViewById(R.id.SearchText);
         gps =(ImageView) findViewById(R.id.GpsBtn);
         cust = (ImageView)findViewById(R.id.CusBtn);
+        logout = (ImageView)findViewById(R.id.DeliveryLogout);
+        settings = (ImageView)findViewById(R.id.DeliverySettings);
 
         isServiceFine();
 
@@ -192,6 +198,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, CustomerPopUp.class);
+                startActivity(intent);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSharedPreference(MapsActivity.this);
+                Intent intent = new Intent(MapsActivity.this,Login.class);
+                startActivity(intent);
+            }
+        });
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapsActivity.this, DeliveryManMyAccount.class);
                 startActivity(intent);
             }
         });
@@ -223,6 +246,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+    public static void getSharedPreference(Context context){
+        SharedPreferences preferences  = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear().commit();
+
+        Log.d("Checking","CheckingSharedPreference"+preferences.getString("USERJOBROLE",null));
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
 
 
 

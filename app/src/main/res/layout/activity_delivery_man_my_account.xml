@@ -1,29 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragPharMyAcc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobilepharmacy.mobilepharmacy.PharmacistMyAccount">
+    tools:context="mobilepharmacy.mobilepharmacy.DeliveryManMyAccount">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Name:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.032"
-        app:layout_constraintHorizontal_bias="0.024" />
 
     <EditText
-        android:id="@+id/PharAccNameEtxt"
+        android:id="@+id/DelSetNameEtxt"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -37,49 +22,49 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.07" />
 
-    <EditText
-        android:id="@+id/PharAccEmailEtxt"
-        android:layout_width="330dp"
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
+        android:text="Name:"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.254" />
+        app:layout_constraintHorizontal_bias="0.024"
+        app:layout_constraintVertical_bias="0.032" />
 
     <TextView
-        android:id="@+id/textView27"
+        android:id="@+id/textView22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="Email:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.046"
-        app:layout_constraintVertical_bias="0.206" />
+        app:layout_constraintHorizontal_bias="0.024"
+        app:layout_constraintVertical_bias="0.2" />
 
-    <TextView
-        android:id="@+id/Phar"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/DelSetEmailEtxt"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Password:"
+        android:ems="10"
+        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.296"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.384"
-        app:layout_constraintHorizontal_bias="0.026" />
+        app:layout_constraintVertical_bias="0.247" />
 
     <EditText
-        android:id="@+id/PharAccPassEtxt"
+        android:id="@+id/DelSetPasswordEtxt"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -87,14 +72,28 @@
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.21"
-        app:layout_constraintVertical_bias="0.442" />
+        app:layout_constraintVertical_bias="0.429" />
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.372" />
 
     <Button
-        android:id="@+id/PharAccEditBtn"
+        android:id="@+id/DelSetEditBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -103,23 +102,26 @@
         android:text="Edit"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.171"
+        app:layout_constraintHorizontal_bias="0.189"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.76" />
+        app:layout_constraintVertical_bias="0.79" />
 
     <Button
-        android:id="@+id/PharAccSaveBtn"
+        android:id="@+id/DelSetSaveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/button_corner"
         android:text="Save"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.797"
+        app:layout_constraintHorizontal_bias="0.757"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.76" />
+        app:layout_constraintVertical_bias="0.79" />
+
 </android.support.constraint.ConstraintLayout>
