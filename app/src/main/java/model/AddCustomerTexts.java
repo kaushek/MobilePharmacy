@@ -8,25 +8,33 @@ import java.io.Serializable;
 
 public class AddCustomerTexts implements Serializable{
 
+    private String id;
     private String to;
     private String from;
     private String subject;
     private String notes;
     private String ImgKey;
     private String url;
+    private String date;
+    private String order;
+    private Boolean status;
+
+
 
     public AddCustomerTexts(){
 
     }
+    public AddCustomerTexts(String to, String from, String subject, String notes, String imgKey, String url,String CurrentDate,String ord, Boolean status) {
+        this.to = to;
+        this.from = from;
+        this.subject = subject;
+        this.notes = notes;
+        ImgKey = imgKey;
+        this.url = url;
+        this.date = CurrentDate;
+        this.order = ord;
+        this.status = status;
 
-    public AddCustomerTexts(String TO, String FROM, String SUBJECT, String NOTES, String key, String imgUrl)
-    {
-        this.to = TO;
-        this.from = FROM;
-        this.subject = SUBJECT;
-        this.notes = NOTES;
-        this.ImgKey = key;
-        this.url = imgUrl;
     }
 
     public String getTo() {
@@ -75,5 +83,29 @@ public class AddCustomerTexts implements Serializable{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

@@ -32,7 +32,6 @@ public class ShowCustomer extends AppCompatActivity  {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Customers");
 
-       // final String id = getIntent().getExtras().getString ("data");
         customer= (AddCustomer) getIntent().getSerializableExtra("data");
 
         fname = (TextView)findViewById(R.id.fnameTV);
@@ -47,14 +46,6 @@ public class ShowCustomer extends AppCompatActivity  {
         mobile = (TextView)findViewById(R.id.numTV);
         mobile.setText(String.valueOf(customer.getNum()));
 
-//        address = (TextView)findViewById(R.id.addressTV);
-//        address.setText(customer.getAdd());
-//
-//        area = (TextView)findViewById(R.id.areaTV);
-//        area.setText(customer.getCarea());
-//
-//        city = (TextView)findViewById(R.id.cityTV);
-//        city.setText(customer.getCcity());
 
 
     }

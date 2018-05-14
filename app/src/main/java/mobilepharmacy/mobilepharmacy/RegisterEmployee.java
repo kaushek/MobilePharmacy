@@ -85,76 +85,37 @@ public class RegisterEmployee extends Fragment implements Serializable{
                 b = (empUserName.getText().toString()).matches(EMAIL_REGEX);
                 if (NameEmp != null || JobRoleEmp != null || UsernameEmp != null || PasswordEmp != null) {
 
-                 //   if (b == true) {
 
-                        try {
-                            firebaseAuth.createUserWithEmailAndPassword(UsernameEmp, PasswordEmp).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-//                        progressDialog.dismiss();
-                                    if (task.isSuccessful()) {
-//                            Toast.makeText(CustomerSignUp.this, "Registration successful", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(CustomerSignUp.this, Login.class);
-//                            startActivity(intent);
-                                        UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
-                                        String userId = userInfo.getUid();
-                                        addUserRoletoDB(userId, JobRoleEmp);
-                                        AddToDB(NameEmp, JobRoleEmp, UsernameEmp, PasswordEmp, userId);
-                                        ClearFields();
-                                        Toast.makeText(getActivity(), "Registration Successful.", Toast.LENGTH_SHORT).show();
-                                    } else {
-//                                    Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                    try {
+                        firebaseAuth.createUserWithEmailAndPassword(UsernameEmp, PasswordEmp).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
 
-                                        FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                                        Toast.makeText(getActivity(), "Failed to register: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
+                                    String userId = userInfo.getUid();
+                                    addUserRoletoDB(userId, JobRoleEmp);
+                                    AddToDB(NameEmp, JobRoleEmp, UsernameEmp, PasswordEmp, userId);
+                                    ClearFields();
+                                    Toast.makeText(getActivity(), "Registration Successful.", Toast.LENGTH_SHORT).show();
+                                } else {
 
-                                    }
+                                    FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                                    Toast.makeText(getActivity(), "Failed to register: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
                                 }
-                            });
-                        } catch (Exception Ex) {
-                            Toast.makeText(getActivity(), "Please fill the empty fields.", Toast.LENGTH_SHORT).show();
-                        }
+                            }
+                        });
+                    } catch (Exception Ex) {
+                        Toast.makeText(getActivity(), "Please fill the empty fields.", Toast.LENGTH_SHORT).show();
                     }
-//                    else
-//                    {
-//                        Toast.makeText(getActivity(), "Please provide a valid email address", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
+                }
+
                 else
                 {
                     Toast.makeText(getActivity(), "Please provide some values", Toast.LENGTH_SHORT).show();
                 }
-//                try {
-//                    firebaseAuth.createUserWithEmailAndPassword(UsernameEmp, PasswordEmp)
-//                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<AuthResult> task) {
-////                               UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmailAsync(email).get();
-//                                    if (task.isSuccessful()) {
-//                                        UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
-//                                        Toast.makeText(getActivity(), userInfo.getUid(), Toast.LENGTH_SHORT).show();
-//                                    } else {
-//                                        Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT).show();
-//                                    }
-//
-//                                     UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
-//                                String userId = userInfo.getUid();
-//                                addUserRoletoDB(userId, JobRoleEmp);
-//
-////                                Log.d("check user info", "onComplete: " + userInfo.getEmail());
-//                                    Intent intent = new Intent(getActivity(), Login.class);
-////                                intent.putExtra("DeliveryManDetails", userInfo.getEmail());
-//                                }
-////                            OnFailureListener
-//                            });
-//                }
-//                catch (Exception ex)
-//                {
-//                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-//                }
+
 
             }
         });

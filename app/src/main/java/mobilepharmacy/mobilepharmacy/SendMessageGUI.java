@@ -2,9 +2,12 @@ package mobilepharmacy.mobilepharmacy;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,8 +30,12 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
+import model.AddCustomer;
 import model.AddCustomerTexts;
 
 public class SendMessageGUI extends AppCompatActivity {
@@ -42,6 +50,7 @@ public class SendMessageGUI extends AppCompatActivity {
     private EditText from;
     private EditText subject;
     private EditText note;
+    private Spinner selectOrder;
 
     private String addTo;
     private String addFrom;
@@ -49,6 +58,10 @@ public class SendMessageGUI extends AppCompatActivity {
     private String addNote;
     private String downloadURL;
     private String dUrl;
+    private String order;
+
+    String fname;
+    String lname;
 
     public static Uri FILE_PATH;
     private final int PICK_IMAGE_REQUEST = 10;
@@ -63,6 +76,17 @@ public class SendMessageGUI extends AppCompatActivity {
     private StorageReference storageReference;
     private StorageReference storageRef;
 
+    private static String userID;
+    private static String userFiirstName;
+    private static String userLastName;
+    private static String userEmail;
+    private static String userPassword;
+    private static String userConfirmPassword;
+    private static Double userLatitude;
+    private static Double userLongitude;
+    private static int userPhoneNumber;
+    String formattedDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +99,7 @@ public class SendMessageGUI extends AppCompatActivity {
         firebaseStorage = firebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
-//        customer= (AddCustomer) getIntent().getSerializableExtra("CustomerDetails");
-//        from.setText(customer.getFname() + "\t" + customer.getLname() );
-
+        retreiveSharedVariableValues(SendMessageGUI.this);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -88,6 +110,15 @@ public class SendMessageGUI extends AppCompatActivity {
         from = (EditText)findViewById(R.id.fromTxt);
         subject = (EditText)findViewById(R.id.subTxt);
         note = (EditText)findViewById(R.id.notesTxt);
+        selectOrder = (Spinner)findViewById(R.id.selectMedicineSpnr);
+
+
+        to.setText("Pharmacy");
+        to.setEnabled(false);
+        to.setVisibility(View.INVISIBLE);
+
+        from.setText(userFiirstName);
+        from.setEnabled(false);
 
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,10 +131,19 @@ public class SendMessageGUI extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadImage();
+                AddCustomerTexts addCustomerTexts1 = new AddCustomerTexts(to.getText().toString(),from.getText().toString(),subject.getText().toString(),note.getText().toString(),imageKey,downloadURL,formattedDate, order,false);
 
             }
-        });
 
+        });
+        clearFields();
+
+    }
+
+    private void clearFields()
+    {
+        subject.setText("");
+        note.setText("");
     }
 
     private void dbfunction()
@@ -112,19 +152,16 @@ public class SendMessageGUI extends AppCompatActivity {
         addTo = to.getText().toString();
         addSubject = subject.getText().toString();
         addNote = note.getText().toString();
-//        dUrl = downloadURL;
-//        Log.d("checkdUrl", "onClick: " + dUrl);
-//                downloadURL = (storageRef.getDownloadUrl()).toString();
+        order =  selectOrder.getSelectedItem().toString();
 
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        formattedDate = df.format(c);
 
-        if (addTo != null && addSubject != null && addNote != null) {
-//            uploadImage();
-            AddTextToDB(addTo,addFrom, addSubject, addNote, imageKey, downloadURL);
+        if (addSubject != null && addNote != null) {
+            AddTextToDB(addTo,addFrom, addSubject, addNote, imageKey, downloadURL, formattedDate, order);
 
-
-
-//                    FirebaseAuthException e = (FirebaseAuthException )task.getException();
-//                    Toast.makeText(SendMessageGUI.this, "Failed Registration: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             Toast.makeText(SendMessageGUI.this, "Message sent", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -132,8 +169,39 @@ public class SendMessageGUI extends AppCompatActivity {
         }
     }
 
-    private void AddTextToDB(String Add_To, String Add_from, String Add_Subject, String Add_Note, String imageKey, String Url) {
-        AddCustomerTexts addDetails = new AddCustomerTexts(Add_To, Add_from, Add_Subject, Add_Note, imageKey, Url);
+    public static void getSharedPreference(String id,String fname,String lname,String email, String date, String orderMedi, Context context){
+        SharedPreferences preferences  = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("USERID",id);
+        editor.putString("USERFIRSTNAME", fname);
+        editor.putString("USERLASTNAME", lname);
+        editor.putString("USEREMAIL", email);
+        editor.putString("DATE", date);
+        editor.putString("ORDER", orderMedi);
+
+        editor.commit();
+    }
+
+    public static void retreiveSharedVariableValues(Context context){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        userID = prefs.getString("USERID",null);
+        userEmail = prefs.getString("USEREMAIL",null);
+        userFiirstName = prefs.getString("USERFIRSTNAME",null);
+        userLastName = prefs.getString("USERLASTNAME",null);
+
+        if(userID!=null){
+            Log.d("TAG","Shared Preference UserID :"+userID);
+            Log.d("TAG","Shared Preference UserID :"+userEmail);
+            Log.d("TAG","Shared Preference UserID :"+userPassword);
+            Log.d("TAG","Shared Preference UserID :"+userConfirmPassword);
+            Log.d("TAG","Shared Preference UserID :"+userLatitude);
+            Log.d("TAG","Shared Preference UserID :"+userLongitude);
+            Log.d("TAG","Shared Preference UserID :"+userPhoneNumber);
+        }
+    }
+
+    private void AddTextToDB(String Add_to, String Add_from, String Add_Subject, String Add_Note, String imageKey, String Url, String date, String ord) {
+        AddCustomerTexts addDetails = new AddCustomerTexts(Add_to, Add_from, Add_Subject, Add_Note, imageKey, Url,date,ord,false);
         databaseReference.child("AddMessageItems").push().setValue(addDetails);
     }
 
@@ -158,7 +226,6 @@ public class SendMessageGUI extends AppCompatActivity {
             progressDialog.setTitle("Sending...");
             progressDialog.show();
 
-//            StorageReference ref = storageReference.child("image/" + imageKey);
             StorageReference ref = storageReference.child("image/" + getImageExt(FILE_PATH));
 
             ref.putFile(FILE_PATH)

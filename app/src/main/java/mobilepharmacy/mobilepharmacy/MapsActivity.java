@@ -1,7 +1,9 @@
 package mobilepharmacy.mobilepharmacy;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -55,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import model.AddCustomer;
+import model.NotifyPharmacist;
 
 import static mobilepharmacy.mobilepharmacy.R.id.map;
 import static mobilepharmacy.mobilepharmacy.R.id.start;
@@ -68,7 +71,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MarkerOptions mrkOpt = new MarkerOptions();
     private LatLng lalg;
     private LatLng colombo;
-//    private LatLng lalg2;
 
     private static final String TAG = "MapsActivity";
     private static final int Error_Dialog_Request = 901;
@@ -84,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageView cust;
     private ImageView logout;
     private ImageView settings;
+    private ImageView notification;
 
     //variables
     private boolean permissionGranted = false;
@@ -92,6 +95,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FirebaseDatabase database;
     DatabaseReference reference;
     AddCustomer customer;
+
+    public String from;
+    public String DelStatus;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -189,6 +195,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         cust = (ImageView)findViewById(R.id.CusBtn);
         logout = (ImageView)findViewById(R.id.DeliveryLogout);
         settings = (ImageView)findViewById(R.id.DeliverySettings);
+        notification = (ImageView)findViewById(R.id.sendNotification);
 
         isServiceFine();
 
@@ -216,6 +223,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, DeliveryManMyAccount.class);
                 startActivity(intent);
+            }
+        });
+
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                database = FirebaseDatabase.getInstance();
+                reference = database.getReference();
+
+                from = "DeliveryMan";
+                DelStatus = "Delivered";
+                AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                builder.setTitle(R.string.app_name);
+                builder.setMessage("Do u want to notify the pharmacist?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        SendNotification(from, DelStatus);
+
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
     }
@@ -263,39 +299,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent);
     }
 
-
-
-
-
-   /* public void moveCam(LatLng latLng, float zoom) {
-        Log.d(TAG, "moveCamera: lat: " + latLng.latitude + "lng: " + latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-
-        mMap.addMarker(new MarkerOptions().title("Marker in colombo"));
-
-        mMap.getCameraPosition();
-
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-        }
-*/
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-
-
-
+    public void SendNotification(String frm, String stat)
+    {
+        NotifyPharmacist notifyPharmacist = new NotifyPharmacist(frm, stat, false);
+        reference.child("DeliveryStatus").push().setValue(notifyPharmacist);
+    }
 
 
     public boolean isServiceFine()
@@ -347,7 +355,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             Address address = list.get(0);
             Log.d(TAG, "geoLocate: Location Found: " + address.toString());
-          //  Toast.makeText(this, address.toString(),Toast.LENGTH_SHORT).show();
 
             LatLng addr = new LatLng(address.getLatitude(), address.getLongitude())/* new LatLng(6.927079, 79.861244))*/;
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(addr, Default_Zoom));

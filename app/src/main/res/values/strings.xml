@@ -19,4 +19,9 @@
         <item>Your order has been dispatched</item>
         <item>Sorry. Stocks are not available at the moment</item>
     </string-array>
+    
+    <string-array name="customerSelectedMedicines">
+        <item>I need all the medicines</item>
+        <item>I need only selected medicines</item>
+    </string-array>
 </resources>

@@ -40,6 +40,7 @@ public class CustomerListView extends AppCompatActivity {
     private List<AddCustomer> customerList = new ArrayList<>();
     ArrayAdapter<String> adapter;
     AddCustomer customer;
+
     public static final String KEY_FNAME="fname";
 
     private static final int RequestCode = 1;
@@ -65,34 +66,13 @@ public class CustomerListView extends AppCompatActivity {
 
             @Override
             public void create(SwipeMenu menu) {
-                // create "open" item
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getApplicationContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                openItem.setWidth(170);
-                // set item title
-                openItem.setTitle("Open");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
 
-                // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-                        0x3F, 0x25)));
-                // set item width
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0x45,
+                        0xD1, 0x61)));
                 deleteItem.setWidth(170);
-                // set a icon
                 deleteItem.setIcon(R.drawable.ic_call);
-                // add to menu
                 menu.addMenuItem(deleteItem);
             }
         };
@@ -108,10 +88,8 @@ public class CustomerListView extends AppCompatActivity {
                     customer = ds.getValue(AddCustomer.class);
                     list.add(customer.getFname().toString() + " " + customer.getLname().toString() + "\n" + customer.getNum());
                     customerList.add(customer);
-//                    num = customer.getNum();
                     Log.d("TAG", "onDataChange: " + customer.getNum());
 
-//                    Log.wtf("Tag","cf" +customer.getFname().toString());
                 }
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -129,11 +107,8 @@ public class CustomerListView extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                         switch (index) {
+
                             case 0:
-                                // open
-                                Log.d("CustomerListView", "onMenuItemClick: " + index);
-                                break;
-                            case 1:
                                 // call
                                 num = customerList.get(position).getNum();
                                 Log.wtf("TAG","ListViewClicked"+customerList.get(position).getNum());

@@ -38,7 +38,7 @@
             android:textColor="#000"
             android:id="@+id/SearchText"
             android:background="@null"
-            android:hint="Enter the customer name here"
+            android:hint="Search your place here.."
             android:imeOptions="actionSearch"/>
 
     </RelativeLayout>
@@ -86,5 +86,16 @@
         android:scaleType="centerCrop"
         android:id="@+id/DeliverySettings"
         android:src="@drawable/ic_settings"/>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/DeliverySettings"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/sendNotification"
+        android:src="@drawable/ic_notify"/>
 
 </RelativeLayout>

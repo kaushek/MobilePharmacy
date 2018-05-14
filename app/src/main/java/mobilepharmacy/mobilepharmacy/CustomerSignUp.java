@@ -43,12 +43,10 @@ import model.UserRole;
 
 public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallback {
 
-    GoogleMap mMap;
-    MapView mapView;
-    View mview;
 
     private static final String TAG = "CustomersignUp";
 
+    GoogleMap mMap;
     private static final String Fine_Location = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String Coarse_Location = Manifest.permission.ACCESS_COARSE_LOCATION;
     private boolean permissionGranted = false;
@@ -76,10 +74,8 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
     private int num;
     private String role;
 
-
     Double lat;
     Double lng;
-
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -87,6 +83,11 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
 
 
     ArrayList<LatLng> markerPoints;
+
+    ProgressDialog progressDialog;
+
+    private static final String EMAIL_REGEX  = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+    private Boolean b;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -112,9 +113,6 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
                     }
 
                     markerPoints.add(latLng);
-//                    LatLng addr = new LatLng(address.getLatitude(), address.getLongitude())/* new LatLng(6.927079, 79.861244))*/;
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(addr, Default_Zoom));
-//                    mMap.addMarker(new MarkerOptions().position(addr).title(addr.toString()));
 
                     LatLng location = new LatLng(latLng.latitude, latLng.longitude);
                     lat = location.latitude;
@@ -172,52 +170,60 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
         city.setVisibility(View.INVISIBLE);
         area.setVisibility(View.INVISIBLE);
 
-        try {
-            if (firstname.getText() != null && lastname.getText() != null && email.getText() != null && password.getText() != null
-            && confirmpassword.getText() != null && mobile.getText() != null && custRole.getText() !=null)
-            {
-                if(validateMobilenum()) {
-                    signUp.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final ProgressDialog progressDialog = ProgressDialog.show(CustomerSignUp.this, "Please wait..", "Your Profile is being created", true);
-                            getDataFromFields();
-                            firebaseAuth.createUserWithEmailAndPassword(eml, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressDialog.dismiss();
-                                    if (task.isSuccessful()) {
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                                        Toast.makeText(CustomerSignUp.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                                        UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
-                                        String userId = userInfo.getUid();
-                                        customerRole(userId, role);
-                                        addtoDatabase(fnme, lnme, eml, pwd, confpwd, num, lat, lng, userId);
-                                        Intent intent = new Intent(CustomerSignUp.this, Login.class);
-                                        startActivity(intent);
-                                    } else {
-                                        Toast.makeText(CustomerSignUp.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                b = (email.getText().toString()).matches(EMAIL_REGEX);
+
+                try {
+
+                    if (firstname.getText() != null && lastname.getText() != null && email.getText() != null && password.getText() != null
+                            && confirmpassword.getText() != null && mobile.getText() != null && custRole.getText() != null) {
+
+                        if (b == true) {
+
+                            if (validateMobilenum()) {
+                                progressDialog = ProgressDialog.show(CustomerSignUp.this, "Please wait..", "Your Profile is being created", true);
+                                getDataFromFields();
+                                firebaseAuth.createUserWithEmailAndPassword(eml, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        progressDialog.dismiss();
+                                        if (task.isSuccessful()) {
+
+                                            Toast.makeText(CustomerSignUp.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                                            UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
+                                            String userId = userInfo.getUid();
+                                            customerRole(userId, role);
+                                            addtoDatabase(fnme, lnme, eml, pwd, confpwd, num, lat, lng, userId);
+                                            Intent intent = new Intent(CustomerSignUp.this, Login.class);
+                                            startActivity(intent);
+                                        } else {
+                                            Toast.makeText(CustomerSignUp.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            } else {
+                                Toast.makeText(CustomerSignUp.this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    });
+                        else {
+                            Toast.makeText(CustomerSignUp.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(CustomerSignUp.this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Toast.makeText(this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    Toast.makeText(CustomerSignUp.this, "Please fill all the fields to continue", Toast.LENGTH_SHORT).show();
                 }
             }
-            else
-            {
-                Toast.makeText(this, "Please fill all the fields to continue", Toast.LENGTH_SHORT).show();
-            }
-        }
-        catch (Exception ex)
-        {
-            Toast.makeText(this, "Please fill all the fields to continue", Toast.LENGTH_SHORT).show();
-        }
+        });
     }
+
 
     private void addtoDatabase(String fname, String lname, String email, String password, String conPassword, int number, Double lat, Double lng,String userID) {
         AddCustomer addCustomer = new AddCustomer(fname, lname, email, password, conPassword, number,lat, lng,userID);
@@ -325,13 +331,5 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
 
         }
     }
-
-
-
-
-
-
-
-
 
 }

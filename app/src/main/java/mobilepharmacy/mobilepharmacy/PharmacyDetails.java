@@ -45,9 +45,7 @@ public class PharmacyDetails extends Fragment {
             butCall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-//                    callIntent.setData(Uri.parse("tel:0777532068"));
-//                    startActivity(callIntent);
+
                     MakePhoneCall();
 
                 }

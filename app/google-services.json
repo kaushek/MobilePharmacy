@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:795087471542:android:eb0c9f63ec9cc97c",
+        "android_client_info": {
+          "package_name": "com.github.chizoba.firebasecloudfunctions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795087471542-l31rjchg8r75pgfhrvhs1644cdjtrtuk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.chizoba.firebasecloudfunctions",
+            "certificate_hash": "03da233fa75230d182b3a9e1c1370c2c01e9bf35"
+          }
+        },
+        {
+          "client_id": "795087471542-hlq30qrhoer9ion2p5gakabgqdp7aoi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPhq97qLcwGTAhKB8OdcN6tFFPf-99-yo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795087471542-hlq30qrhoer9ion2p5gakabgqdp7aoi3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:795087471542:android:04feddc23029a4bf",
         "android_client_info": {
           "package_name": "mobilepharmacy.mobilepharmacy"

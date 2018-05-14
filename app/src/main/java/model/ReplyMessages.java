@@ -10,16 +10,20 @@ public class ReplyMessages {
     private String frm;
     private String sub;
     private String msg;
+    private String date;
+    private Boolean status;
 
-    ReplyMessages()
+    public ReplyMessages()
     {}
 
-    public ReplyMessages(String to, String from, String subject, String message)
+    public ReplyMessages(String to, String from, String subject, String message, String currentDate, Boolean stats)
     {
         this.To = to;
         this.frm = from;
         this.sub = subject;
         this.msg = message;
+        this.date = currentDate;
+        this.status = stats;
     }
 
     public String getTo() {
@@ -54,6 +58,21 @@ public class ReplyMessages {
         this.msg = msg;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 }
 
 

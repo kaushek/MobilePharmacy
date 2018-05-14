@@ -207,12 +207,12 @@ private static String userJobRole;
     private void setDataToSharedPreference(){
         Log.d("Login", "setDataToSharedPreference: UserRole: " + userRole);
         if(userRole.equals("Customer")){
-//            Log.d("Login", "setDataToSharedPreference: UserRole: " + userRole);
+            Log.d("Login", "setDataToSharedPreference: UserRole: " + userRole);
             reference.child("Customers").child(users.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     AddCustomer customer = dataSnapshot.getValue(AddCustomer.class);
-                  String lat =  customer.getLat().toString();
+                    String lat =  customer.getLat().toString();
                     String lng=  customer.getLng().toString();
                 getSharedPreference( customer.getUserID(),customer.getFname(),customer.getLname(), customer.getPass(),
                         customer.getNum(),lat,lng, customer.getEmail(),  customer.getConfPass(),"Customer",Login.this );
@@ -251,11 +251,9 @@ private static String userJobRole;
                 userRole = user.getJobRole();
                 setDataToSharedPreference();
                 Log.d("Login", "onDataChange: CurrentUserRole: " + userRole);
-//                Toast.makeText(Login.this, "Job Role :"+user.getJobRole(), Toast.LENGTH_SHORT).show();
                 if(user.getJobRole().equals("Delivery Man")){
                     Intent intent = new Intent(Login.this,MapsActivity.class);
                     startActivity(intent);
-//                    setDataToSharedPreference();
                 }else if (user.getJobRole().equals("Pharmacist")){
                     Intent intent = new Intent(Login.this, PharmacistMainGUI.class);
                     startActivity(intent);

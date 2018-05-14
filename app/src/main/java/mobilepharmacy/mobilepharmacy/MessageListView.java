@@ -15,7 +15,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import model.AddCustomerTexts;
@@ -31,7 +34,6 @@ public class MessageListView extends AppCompatActivity {
     ArrayAdapter<String> adapter;
 
     AddCustomerTexts custText;
-//    AddCustomer customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,6 @@ public class MessageListView extends AppCompatActivity {
         list = new ArrayList<>();
         adapter = new ArrayAdapter<String>(this, R.layout.message_view, R.id.messages, list);
 
-//        customer = new AddCustomer();
         custText = new AddCustomerTexts();
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -53,9 +54,10 @@ public class MessageListView extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren() )
                 {
+
                     Log.d("MessageListView", "onDataChange: " + ds);
                     custText = ds.getValue(AddCustomerTexts.class);
-                    list.add(custText.getFrom().toString() + "\n" + custText.getNotes().toString());
+                    list.add(custText.getFrom().toString() + "\t\t\t\t\t\t\t\t\t\t" +custText.getDate().toString() + "\n" + custText.getOrder().toString());
                     customerMessageList.add(custText);
 
                 }

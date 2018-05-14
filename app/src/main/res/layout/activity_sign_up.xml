@@ -17,9 +17,9 @@
         android:drawableLeft="@drawable/ic_action_username"
         android:ems="10"
         android:hint="                 User Name"
+        android:inputType="textEmailAddress"
         android:textAlignment="textStart"
         android:textColor="#000000"
-        android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -36,15 +36,17 @@
         android:layout_width="300dp"
         android:layout_height="35dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textColor="#000000"
         android:background="@drawable/edittext_corner"
         android:drawableLeft="@drawable/ic_action_password"
         android:ems="10"
-        android:hint="       Password"
+        android:hint="                 Password"
         android:inputType="textPassword"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -53,9 +55,7 @@
         app:layout_constraintVertical_bias="0.621"
         tools:ignore="HardcodedText,RtlHardcoded"
         tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        tools:layout_constraintLeft_creator="1" />
 
 
     <ImageView

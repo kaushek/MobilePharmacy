@@ -9,8 +9,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import model.ReplyMessages;
 
@@ -24,11 +31,13 @@ public class ReplyCustomer extends AppCompatActivity {
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference1;
 
     private String To;
     private String From;
     private String Subject;
     private String Message;
+    String formattedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +46,7 @@ public class ReplyCustomer extends AppCompatActivity {
 
         firebaseDatabase = firebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        databaseReference1 = firebaseDatabase.getReference("ReplyMessages");
 
         to = (TextView)findViewById(R.id.toTV);
         from = (TextView)findViewById(R.id.frmTv);
@@ -44,20 +54,17 @@ public class ReplyCustomer extends AppCompatActivity {
         message = (EditText)findViewById(R.id.messageEtxt);
         sendreply = (Button)findViewById(R.id.sendreplyBtn);
 
+        Bundle bundle = getIntent().getExtras();
+        String replyto = bundle.getString("Customer");
 
-//        ArrayAdapter<String> adapter;
-//        List<String> list;
-//
-//        list = new ArrayList<String>();
-//        list.add("Your order has been dispatched.");
-//        list.add("Sorry. Stocks are not available at the moment");
-//
-//        adapter = new ArrayAdapter<String>(getApplicationContext(),
-//                android.R.layout.simple_spinner_item, list);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        subject.setAdapter(adapter);
+        to.setText(replyto);
 
-        if (Message != null) {
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        formattedDate = df.format(c);
+
+        if (message.getText() != null) {
             sendreply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -65,7 +72,7 @@ public class ReplyCustomer extends AppCompatActivity {
                     From = from.getText().toString();
                     Subject = subject.getSelectedItem().toString();
                     Message = message.getText().toString();
-                    sendReplyToCustomer(To, From, Subject, Message);
+                    sendReplyToCustomer(To, From, Subject, Message, formattedDate);
                     Toast.makeText(ReplyCustomer.this, "Message Sent", Toast.LENGTH_SHORT).show();
                     clearFields();
                 }
@@ -74,12 +81,25 @@ public class ReplyCustomer extends AppCompatActivity {
         else {
             Toast.makeText(this, "Please type a message to send", Toast.LENGTH_SHORT).show();
         }
+
+
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
-    public void sendReplyToCustomer(String to, String frm, String sub, String msg)
+    public void sendReplyToCustomer(String to, String frm, String sub, String msg, String date)
     {
-        ReplyMessages replyMessages = new ReplyMessages(to, frm, sub, msg);
+        ReplyMessages replyMessages = new ReplyMessages(to, frm, sub, msg, date, false);
         databaseReference.child("ReplyMessages").push().setValue(replyMessages);
 
     }

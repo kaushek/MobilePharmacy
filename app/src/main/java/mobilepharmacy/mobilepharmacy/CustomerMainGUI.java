@@ -1,12 +1,17 @@
 package mobilepharmacy.mobilepharmacy;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,6 +24,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Date;
+
+import model.AddCustomerTexts;
+import model.ReplyMessages;
 
 public class CustomerMainGUI extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener   {
 
@@ -29,6 +44,10 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
     private ActionBarDrawerToggle toggle;
 
     private FirebaseAuth firebaseAuth;
+    FirebaseDatabase database;
+    DatabaseReference reference;
+
+    ReplyMessages replyMessages;
 
     public void showReceivedGUI()
     {
@@ -60,6 +79,8 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
         setContentView(R.layout.activity_customer_main_gui);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference().child("ReplyMessages");
 
         showReceivedGUI();
         showSendMessageGUI();
@@ -73,6 +94,55 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        reference.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                for(DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    if(ds!=null)
+                    {
+                        replyMessages = ds.getValue(ReplyMessages.class);
+                        if(replyMessages.getStatus()==false){
+
+                            NotificationManager notificationManager =
+                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                            Intent notificationIntent = new Intent(getApplicationContext(), CustomerMainGUI.class);
+                            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
+                                    notificationIntent, 0);
+                            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            NotificationCompat.Builder notificationBuilder =
+                                    new NotificationCompat.Builder(CustomerMainGUI.this)
+                                            .setContentTitle("Message from " +replyMessages.getFrm())
+                                            .setContentText(replyMessages.getSub())
+                                            .setSmallIcon(R.drawable.messageicon)
+                                            .setContentIntent(intent)
+                                            .setSound(defaultSoundUri);
+
+                            Log.d("PharmacistMainGUI", "onDataChange: Received from" + replyMessages.getFrm() );
+                            notificationManager.notify((int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE) /* ID of notification */, notificationBuilder.build());
+
+
+                            ReplyMessages replyMessages2 = new ReplyMessages(replyMessages.getTo(), replyMessages.getFrm(), replyMessages.getSub(),
+                                    replyMessages.getMsg(), replyMessages.getDate(),true);
+                            reference.child(ds.getKey()).setValue(replyMessages2);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
@@ -88,18 +158,15 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        //     cusMyAcc
 
         if (id == R.id.nav_home)
         {
-            //     Toast.makeText(this, "account", Toast.LENGTH_SHORT).show();
             CustMainGUIFragment custFrag = new CustMainGUIFragment();
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.linerarLayout, custFrag).commit();
         }
         if (id == R.id.nav_account)
         {
-            //     Toast.makeText(this, "account", Toast.LENGTH_SHORT).show();
             CustomerMyAccount fragmentCusMyAcc = new CustomerMyAccount();
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.linerarLayout, fragmentCusMyAcc).commit();
