@@ -42,6 +42,7 @@ public class ShowMessages extends AppCompatActivity implements Serializable {
     private EditText notes;
     private ImageView viewPresciption;
     private Button sendReply;
+    private String messageKEy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,10 @@ public class ShowMessages extends AppCompatActivity implements Serializable {
         firebaseStorage = firebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference("image");
 
-        CustomerMessages = (AddCustomerTexts) getIntent().getSerializableExtra("MessageData");
+        if(getIntent()!=null){
+            CustomerMessages = (AddCustomerTexts) getIntent().getSerializableExtra("MessageData");
+            messageKEy = getIntent().getStringExtra("messageKey");
+        }
 
         frm = (TextView)findViewById(R.id.FromTV);
         frm.setText(CustomerMessages.getFrom());
@@ -66,7 +70,13 @@ public class ShowMessages extends AppCompatActivity implements Serializable {
         Log.d("CheckMessage", "onCreate: " + CustomerMessages.getImgKey());
 
         Log.d("CheckMessage", "onCreate: URL: " + CustomerMessages.getUrl());
+        sendReply = (Button) findViewById(R.id.replyMessageBtn);
+
+        sendReply.setEnabled(false);
+        sendReply.setBackground(getResources().getDrawable(R.drawable.disabled_button_corner));
         Glide.with(this).load(CustomerMessages.getUrl()).into(viewPresciption);
+        sendReply.setEnabled(true);
+        sendReply.setBackground(getResources().getDrawable(R.drawable.button_corner));
         viewPresciption.getDisplay();
 
 
@@ -89,6 +99,8 @@ public class ShowMessages extends AppCompatActivity implements Serializable {
                     fOut = new FileOutputStream(sdImageMainDirectory);
                     Toast.makeText(ShowMessages.this, "Image saved to files", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
+                    sendReply.setEnabled(false);
+                    sendReply.setBackground(getResources().getDrawable(R.drawable.disabled_button_corner));
                     Toast.makeText(ShowMessages.this, "Error occured. Please try again later.",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -103,14 +115,18 @@ public class ShowMessages extends AppCompatActivity implements Serializable {
         });
 
 
-        sendReply = (Button) findViewById(R.id.replyMessageBtn);
         sendReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ShowMessages.this, ReplyCustomer.class);
+//                intent.putExtra("Customer", CustomerMessages.g);
                 intent.putExtra("Customer", CustomerMessages.getFrom());
-
+                intent.putExtra("Customer", CustomerMessages.getFrom());
+                if(messageKEy != null){
+                    intent.putExtra("messageKey", messageKEy);
+                }
                 startActivity(intent);
+                finish();
             }
         });
 

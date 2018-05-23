@@ -83,7 +83,7 @@ public class RegisterEmployee extends Fragment implements Serializable{
                 PasswordEmp = empPassword.getText().toString();
 
                 b = (empUserName.getText().toString()).matches(EMAIL_REGEX);
-                if (NameEmp != null || JobRoleEmp != null || UsernameEmp != null || PasswordEmp != null) {
+                if (NameEmp != null && JobRoleEmp != null && UsernameEmp != null && PasswordEmp != null) {
 
 
                     try {

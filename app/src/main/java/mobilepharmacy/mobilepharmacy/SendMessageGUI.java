@@ -131,7 +131,7 @@ public class SendMessageGUI extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadImage();
-                AddCustomerTexts addCustomerTexts1 = new AddCustomerTexts(to.getText().toString(),from.getText().toString(),subject.getText().toString(),note.getText().toString(),imageKey,downloadURL,formattedDate, order,false);
+//                AddCustomerTexts addCustomerTexts1 = new AddCustomerTexts(to.getText().toString(),from.getText().toString(),subject.getText().toString(),note.getText().toString(),imageKey,downloadURL,formattedDate, order,false);
 
             }
 

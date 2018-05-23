@@ -205,7 +205,10 @@ public class CustomerMyAccount extends Fragment  {
     }
     private void updateDB(Object addCustomer){
         if(addCustomer!=null)
+        {
             databaseReference.child("Customers").child(userID).setValue(addCustomer);
+            Toast.makeText(getActivity(), "Details are updated successfully", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

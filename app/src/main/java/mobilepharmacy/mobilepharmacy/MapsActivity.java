@@ -60,7 +60,6 @@ import model.AddCustomer;
 import model.NotifyPharmacist;
 
 import static mobilepharmacy.mobilepharmacy.R.id.map;
-import static mobilepharmacy.mobilepharmacy.R.id.start;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -144,7 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         Location currentLocation = (Location) task.getResult();
                                         colombo = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())/* new LatLng(6.927079, 79.861244))*/;
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(colombo, Default_Zoom));
-                                        mMap.addMarker(new MarkerOptions().position(colombo));
+                                        mMap.addMarker(new MarkerOptions().position(colombo).title("My current location"));
                                         markerPoints.add(colombo);
 
 
@@ -303,6 +302,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         NotifyPharmacist notifyPharmacist = new NotifyPharmacist(frm, stat, false);
         reference.child("DeliveryStatus").push().setValue(notifyPharmacist);
+        Toast.makeText(this, "Notification sent", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -446,7 +446,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            ParserTask parserTask = new ParserTask();
+            PaarserActivity parserTask = new PaarserActivity();
 
 
             parserTask.execute(result);
@@ -457,57 +457,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * A class to parse the Google Places in JSON format
      */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+    private class PaarserActivity extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         // Parsing the data in non-ui thread
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
+            JSONObject jsonObject;
+            List<List<HashMap<String, String>>> route = null;
 
             try {
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
+                jsonObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser jsonParser = new DirectionsJSONParser();
 
-                routes = parser.parse(jObject);
-            } catch (Exception e) {
-                e.printStackTrace();
+                route = jsonParser.parse(jsonObject);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            return routes;
+            return route;
         }
 
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList points = null;
-            PolylineOptions lineOptions = null;
+            ArrayList endPoints = null;
+            PolylineOptions polylineOptions = null;
             MarkerOptions markerOptions = new MarkerOptions();
 
             for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList();
-                lineOptions = new PolylineOptions();
+                endPoints = new ArrayList();
+                polylineOptions = new PolylineOptions();
 
-                List<HashMap<String, String>> path = result.get(i);
+                List<HashMap<String, String>> hashMapsPath = result.get(i);
 
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+                for (int j = 0; j < hashMapsPath.size(); j++) {
+                    HashMap<String, String> point = hashMapsPath.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
+                    LatLng latLngPosition = new LatLng(lat, lng);
 
-                    points.add(position);
+                    endPoints.add(latLngPosition);
                 }
 
-                lineOptions.addAll(points);
-                lineOptions.width(12);
-                lineOptions.color(Color.RED);
-                lineOptions.geodesic(true);
+                polylineOptions.addAll(endPoints);
+                polylineOptions.width(12);
+                polylineOptions.color(Color.RED);
+                polylineOptions.geodesic(true);
 
             }
 
 // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
+            mMap.addPolyline(polylineOptions);
         }
     }
 

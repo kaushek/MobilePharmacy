@@ -2,6 +2,7 @@ package mobilepharmacy.mobilepharmacy;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,12 +33,13 @@ public class ReplyCustomer extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReference1;
-
+    private static String TAG = ReplyCustomer.class.getSimpleName();
     private String To;
     private String From;
     private String Subject;
     private String Message;
     String formattedDate;
+    private String messageKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,9 @@ public class ReplyCustomer extends AppCompatActivity {
         message = (EditText)findViewById(R.id.messageEtxt);
         sendreply = (Button)findViewById(R.id.sendreplyBtn);
 
+        if(getIntent()!=null){
+            messageKey = getIntent().getStringExtra("messageKey");
+        }
         Bundle bundle = getIntent().getExtras();
         String replyto = bundle.getString("Customer");
 
@@ -101,7 +106,18 @@ public class ReplyCustomer extends AppCompatActivity {
     {
         ReplyMessages replyMessages = new ReplyMessages(to, frm, sub, msg, date, false);
         databaseReference.child("ReplyMessages").push().setValue(replyMessages);
+        if(messageKey!=null){
+            Log.wtf(TAG,"MessageKEy is :"+messageKey);
+            databaseReference.child("AddMessageItems").child(messageKey).removeValue();
+            finish();
+        }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
     }
 
     private void clearFields()

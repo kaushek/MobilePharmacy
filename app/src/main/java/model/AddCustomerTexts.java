@@ -24,7 +24,7 @@ public class AddCustomerTexts implements Serializable{
     public AddCustomerTexts(){
 
     }
-    public AddCustomerTexts(String to, String from, String subject, String notes, String imgKey, String url,String CurrentDate,String ord, Boolean status) {
+    public AddCustomerTexts(String to, String from, String subject, String notes, String imgKey, String url, String CurrentDate, String ord, Boolean status) {
         this.to = to;
         this.from = from;
         this.subject = subject;
@@ -43,6 +43,14 @@ public class AddCustomerTexts implements Serializable{
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFrom() {

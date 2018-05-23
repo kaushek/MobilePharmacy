@@ -126,14 +126,13 @@ private static String userJobRole;
             @Override
             public void onClick(View v) {
 
-
                 Log.d("check user info", "onComplete: " + "Test");
 
                 b = (username.getText().toString()).matches(EMAIL_REGEX);
 
                 try {
                     if (username.getText() != null && password.getText() != null) {
-                         progressDialog = ProgressDialog.show(Login.this, "Please wait..", "You are signing in", true);
+                        progressDialog = ProgressDialog.show(Login.this, "Please wait..", "You are signing in", true);
 
                         firebaseAuth.signInWithEmailAndPassword(username.getText().toString(), password.getText().toString())
                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -157,8 +156,6 @@ private static String userJobRole;
                                     }
 
                                 });
-
-
                         loginFunction(username.getText().toString(), password.getText().toString());
 
                     } else {
@@ -200,7 +197,6 @@ private static String userJobRole;
         userJobRole = prefs.getString("USERJOBROLE",null);
         if(userJobRole!=null){
             Log.d("TAG","Shared Preference UserID :"+userJobRole);
-
         }
     }
 
@@ -241,6 +237,7 @@ private static String userJobRole;
             });
         }
     }
+
     private void getUserDetails(){
         reference.child("UserRole").child(users.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -254,29 +251,23 @@ private static String userJobRole;
                 if(user.getJobRole().equals("Delivery Man")){
                     Intent intent = new Intent(Login.this,MapsActivity.class);
                     startActivity(intent);
+                    Toast.makeText(Login.this, "Hello Delivery Man! \n  You are signed in as " + username.getText().toString(), Toast.LENGTH_SHORT).show();
                 }else if (user.getJobRole().equals("Pharmacist")){
                     Intent intent = new Intent(Login.this, PharmacistMainGUI.class);
                     startActivity(intent);
+                    Toast.makeText(Login.this, "Hello Pharmacist! \n You are signed in as " + username.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
                 else if (user.getJobRole().equals("Customer")){
                     Intent intent = new Intent(Login.this,CustomerMainGUI.class);
                     startActivity(intent);
+                    Toast.makeText(Login.this, "Hello Customer! \n You are signed in as " + username.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
-
-
-
             }
-
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-
-
-
     }
 
 

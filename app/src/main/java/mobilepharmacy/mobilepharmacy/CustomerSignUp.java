@@ -183,29 +183,35 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
 
                         if (b == true) {
 
-                            if (validateMobilenum()) {
-                                progressDialog = ProgressDialog.show(CustomerSignUp.this, "Please wait..", "Your Profile is being created", true);
-                                getDataFromFields();
-                                firebaseAuth.createUserWithEmailAndPassword(eml, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        progressDialog.dismiss();
-                                        if (task.isSuccessful()) {
+                            if(markerPoints.size()==1) {
 
-                                            Toast.makeText(CustomerSignUp.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                                            UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
-                                            String userId = userInfo.getUid();
-                                            customerRole(userId, role);
-                                            addtoDatabase(fnme, lnme, eml, pwd, confpwd, num, lat, lng, userId);
-                                            Intent intent = new Intent(CustomerSignUp.this, Login.class);
-                                            startActivity(intent);
-                                        } else {
-                                            Toast.makeText(CustomerSignUp.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                                if (validateMobilenum()) {
+                                    progressDialog = ProgressDialog.show(CustomerSignUp.this, "Please wait..", "Your Profile is being created", true);
+                                    getDataFromFields();
+                                    firebaseAuth.createUserWithEmailAndPassword(eml, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            progressDialog.dismiss();
+                                            if (task.isSuccessful()) {
+
+                                                Toast.makeText(CustomerSignUp.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                                                UserInfo userInfo = FirebaseAuth.getInstance().getCurrentUser();
+                                                String userId = userInfo.getUid();
+                                                customerRole(userId, role);
+                                                addtoDatabase(fnme, lnme, eml, pwd, confpwd, num, lat, lng, userId);
+                                                Intent intent = new Intent(CustomerSignUp.this, Login.class);
+                                                startActivity(intent);
+                                            } else {
+                                                Toast.makeText(CustomerSignUp.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(CustomerSignUp.this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                                    });
+                                } else {
+                                    Toast.makeText(CustomerSignUp.this, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else{
+                                Toast.makeText(CustomerSignUp.this, "Please pin your current location", Toast.LENGTH_SHORT).show();
                             }
                         }
                         else {
@@ -228,7 +234,6 @@ public class CustomerSignUp extends AppCompatActivity implements OnMapReadyCallb
     private void addtoDatabase(String fname, String lname, String email, String password, String conPassword, int number, Double lat, Double lng,String userID) {
         AddCustomer addCustomer = new AddCustomer(fname, lname, email, password, conPassword, number,lat, lng,userID);
         databaseReference.child("Customers").child(userID).setValue(addCustomer);
-
     }
 
     private void customerRole(String Id, String Cusrole) {

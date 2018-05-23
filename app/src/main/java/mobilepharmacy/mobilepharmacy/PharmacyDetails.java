@@ -25,7 +25,7 @@ import android.widget.Toast;
 public class PharmacyDetails extends Fragment {
 
     FloatingActionButton butCall;
-    String num = "0777532068";
+    String num = "0112513945";
     private static final int RequestCode = 1;
 
     public PharmacyDetails() {

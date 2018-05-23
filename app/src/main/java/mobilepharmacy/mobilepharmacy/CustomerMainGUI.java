@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -182,6 +183,7 @@ public class CustomerMainGUI extends AppCompatActivity implements NavigationView
             getSharedPreference(this);
             Intent intent = new Intent(this,Login.class);
             startActivity(intent);
+            Toast.makeText(this, "You have successfully logged out", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.CusMainDrawer);

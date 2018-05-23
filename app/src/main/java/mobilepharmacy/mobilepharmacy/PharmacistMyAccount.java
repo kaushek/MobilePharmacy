@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -88,6 +89,7 @@ public class PharmacistMyAccount extends Fragment {
                             password.setEnabled(false);
                             save.setEnabled(false);
                             getSharedPreference(userID, name.getText().toString(), email.getText().toString(), password.getText().toString(),getActivity());
+                            Toast.makeText(getActivity(), "Updated the changes successfully", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

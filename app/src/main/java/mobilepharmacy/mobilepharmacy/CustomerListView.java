@@ -67,13 +67,12 @@ public class CustomerListView extends AppCompatActivity {
             @Override
             public void create(SwipeMenu menu) {
 
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                SwipeMenuItem menuItem = new SwipeMenuItem(
                         getApplicationContext());
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0x45,
-                        0xD1, 0x61)));
-                deleteItem.setWidth(170);
-                deleteItem.setIcon(R.drawable.ic_call);
-                menu.addMenuItem(deleteItem);
+                menuItem.setBackground(new ColorDrawable(Color.rgb(0x45, 0xD1, 0x61)));
+                menuItem.setWidth(170);
+                menuItem.setIcon(R.drawable.ic_call);
+                menu.addMenuItem(menuItem);
             }
         };
 
@@ -117,7 +116,6 @@ public class CustomerListView extends AppCompatActivity {
                                 MakePhoneCall();
                                 break;
                         }
-                        // false : close the menu; true : not close the menu
                         return false;
                     }
                 });
